@@ -1,6 +1,10 @@
 {
   "dependencies": {
+    "playback": "^0.2.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-spotify-web-playback": "^0.14.6",
+    "spotify": "^0.3.0",
+    "web": "^0.0.2"
   }
 }

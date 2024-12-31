@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, newState } from "react";
 
-const ToggleButton = ({ text, isToggled }) => {
+const ToggleButton = ({ text, isToggled, onToggle }) => {
   const [toggled, setToggled] = useState(isToggled);
 
   const handleToggle = () => {
     setToggled((prev) => !prev);
+    onToggle(newState);
   };
 
   return (
