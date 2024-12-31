@@ -8,7 +8,7 @@ export default function Login() {
   return (
     <Container
       className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: "100vh" }}
+      style={{ minHeight: "75vh" }}
     >
       <a
         className="btn btn-dark"

@@ -6,7 +6,7 @@ const code = new URLSearchParams(window.location.search).get("code");
 function App() {
   return (
     <div
-      className="d-flex align-items-center justify-content-center"
+      className="d-flex flex-column align-items-center"
       style={{
         backgroundImage: "url('/background.png')",
         backgroundSize: "cover",
@@ -15,6 +15,9 @@ function App() {
         width: "100vw",
       }}
     >
+      <h1 className="text-center text-white" style={{ marginTop: "4rem" }}>
+        What's In My Library?
+      </h1>
       {code ? <Dashboard code={code} /> : <Login />};
     </div>
   );
