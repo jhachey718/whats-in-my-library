@@ -10,7 +10,17 @@ export default function Login() {
       className="d-flex justify-content-center align-items-center"
       style={{ minHeight: "100vh" }}
     >
-      <a className="btn btn-success btn-lg" href={AUTH_URL}>
+      <a
+        className="btn btn-dark"
+        style={{
+          "--bs-btn-padding-y": "1.5rem",
+          "--bs-btn-padding-x": "2.5rem",
+          "--bs-btn-font-size": "2rem",
+          backgroundColor: "rgba(0, 0, 0, 0.35)", // Semi-transparent black
+          color: "#fff",
+        }}
+        href={AUTH_URL}
+      >
         Login With Spotify
       </a>
     </Container>
