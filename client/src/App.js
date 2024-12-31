@@ -16,7 +16,7 @@ function App() {
       }}
     >
       <h1 className="text-center text-white" style={{ marginTop: "4rem" }}>
-        What's In My Library?
+        What's in my Library?
       </h1>
       {code ? <Dashboard code={code} /> : <Login />};
     </div>
