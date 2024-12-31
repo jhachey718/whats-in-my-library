@@ -1,14 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useAuth from "../useAuth";
 import ToggleButton from "./ToggleButton";
 import Player from "./Player";
 import { Container } from "react-bootstrap";
+import { fetchAllTracks } from "../fetchAllTracks";
+import fetchRandomTrack from "../fetchRandomTrack";
 
 export default function Dashboard({ code }) {
   const [showLyrics, setShowLyrics] = useState(false);
   const [showPlayer, setShowPlayer] = useState(true);
   const [showArt, setShowArt] = useState(false);
   const accessToken = useAuth(code);
+  let tracks;
+  useEffect(() => {
+    const fetchTracks = async () => {
+      try {
+        tracks = await fetchAllTracks(accessToken);
+        console.log("Fetched tracks:", tracks);
+      } catch (error) {
+        console.error("Error in Dashboard fetching tracks:", error.message);
+      }
+    };
+
+    if (accessToken) {
+      fetchTracks();
+    }
+  }, [accessToken]);
+
   return (
     <>
       <Container
@@ -34,10 +52,10 @@ export default function Dashboard({ code }) {
       {/* {showPlayer && (
         <Player
           accessToken={accessToken}
-          trackUri="https://open.spotify.com/track/03h0ioes0mfaZIeAO1fV5o?si=75f83f8706044b17"
+          trackUri="spotify:track:4YA6OM2rLH1jlLUJpJ6j3u"
         />
       )} */}
-      {showLyrics && <p>Lyrics will be displayed here</p>}
+      {showLyrics && <p>no</p>}
       {showPlayer && <p>Player</p>}
       {showArt && <p>Art will be displayed here</p>}
     </>
