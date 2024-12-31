@@ -4,6 +4,7 @@ const ToggleButton = ({ text, isToggled, onToggle }) => {
   const [toggled, setToggled] = useState(isToggled);
 
   const handleToggle = () => {
+    const newState = !toggled;
     setToggled((prev) => !prev);
     onToggle(newState);
   };

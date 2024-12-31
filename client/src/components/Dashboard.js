@@ -6,7 +6,7 @@ import { Container } from "react-bootstrap";
 
 export default function Dashboard({ code }) {
   const [showLyrics, setShowLyrics] = useState(false);
-  const [showListen, setShowListen] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(true);
   const [showArt, setShowArt] = useState(false);
   const accessToken = useAuth(code);
   return (
@@ -23,7 +23,7 @@ export default function Dashboard({ code }) {
         <ToggleButton
           text="Listen"
           isToggled={true}
-          onToggle={(state) => setShowListen(state)}
+          onToggle={(state) => setShowPlayer(state)}
         />
         <ToggleButton
           text="Art"
@@ -31,6 +31,15 @@ export default function Dashboard({ code }) {
           onToggle={(state) => setShowArt(state)}
         />
       </Container>
+      {/* {showPlayer && (
+        <Player
+          accessToken={accessToken}
+          trackUri="https://open.spotify.com/track/03h0ioes0mfaZIeAO1fV5o?si=75f83f8706044b17"
+        />
+      )} */}
+      {showLyrics && <p>Lyrics will be displayed here</p>}
+      {showPlayer && <p>Player</p>}
+      {showArt && <p>Art will be displayed here</p>}
     </>
   );
 }
