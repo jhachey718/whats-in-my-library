@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useAuth from "./useAuth";
+import useAuth from "../useAuth";
 import ToggleButton from "./ToggleButton";
 import Player from "./Player";
 import { Container } from "react-bootstrap";
