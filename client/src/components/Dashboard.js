@@ -10,13 +10,18 @@ export default function Dashboard({ code }) {
   const [showLyrics, setShowLyrics] = useState(false);
   const [showPlayer, setShowPlayer] = useState(true);
   const [showArt, setShowArt] = useState(false);
+  const [tracks, setTracks] = useState([]);
   const accessToken = useAuth(code);
-  let tracks;
   useEffect(() => {
     const fetchTracks = async () => {
       try {
-        tracks = await fetchAllTracks(accessToken);
-        console.log("Fetched tracks:", tracks);
+        const fetchedTracks = await fetchAllTracks(accessToken);
+        console.log("Fetched tracks:", fetchedTracks);
+        console.log(
+          "Random track:",
+          fetchRandomTrack(fetchedTracks).track.name
+        );
+        setTracks(fetchedTracks);
       } catch (error) {
         console.error("Error in Dashboard fetching tracks:", error.message);
       }
@@ -26,7 +31,6 @@ export default function Dashboard({ code }) {
       fetchTracks();
     }
   }, [accessToken]);
-
   return (
     <>
       <Container
@@ -57,7 +61,9 @@ export default function Dashboard({ code }) {
       )} */}
       {showLyrics && <p>no</p>}
       {showPlayer && <p>Player</p>}
-      {showArt && <p>Art will be displayed here</p>}
+      {showArt && tracks.length !== 0 && (
+        <p>{fetchRandomTrack(tracks).track.name}</p>
+      )}
     </>
   );
 }
