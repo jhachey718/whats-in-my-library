@@ -53,12 +53,12 @@ export default function Dashboard({ code }) {
           onToggle={(state) => setShowArt(state)}
         />
       </Container>
-      {/* {showPlayer && (
+      {showPlayer && tracks.length !== 0 && (
         <Player
           accessToken={accessToken}
-          trackUri="spotify:track:4YA6OM2rLH1jlLUJpJ6j3u"
+          trackUri={fetchRandomTrack(tracks).track.uri}
         />
-      )} */}
+      )}
       {showLyrics && <p>no</p>}
       {showPlayer && <p>Player</p>}
       {showArt && tracks.length !== 0 && (
