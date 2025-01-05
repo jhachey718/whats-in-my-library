@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import useAuth from "../useAuth";
 import ToggleButton from "./ToggleButton";
-import Player from "./Player";
+import PlayButton from "./PlayButton";
 import { Container } from "react-bootstrap";
 import { fetchAllTracks } from "../fetchAllTracks";
 import fetchRandomTrack from "../fetchRandomTrack";
@@ -17,10 +17,7 @@ export default function Dashboard({ code }) {
       try {
         const fetchedTracks = await fetchAllTracks(accessToken);
         console.log("Fetched tracks:", fetchedTracks);
-        console.log(
-          "Random track:",
-          fetchRandomTrack(fetchedTracks).track.name
-        );
+        console.log("Random track:", fetchRandomTrack(fetchedTracks).name);
         setTracks(fetchedTracks);
       } catch (error) {
         console.error("Error in Dashboard fetching tracks:", error.message);
@@ -54,16 +51,14 @@ export default function Dashboard({ code }) {
         />
       </Container>
       {showPlayer && tracks.length !== 0 && (
-        <Player
+        <PlayButton
           accessToken={accessToken}
-          trackUri={fetchRandomTrack(tracks).track.uri}
+          trackUri={fetchRandomTrack(tracks).uri}
         />
       )}
       {showLyrics && <p>no</p>}
       {showPlayer && <p>Player</p>}
-      {showArt && tracks.length !== 0 && (
-        <p>{fetchRandomTrack(tracks).track.name}</p>
-      )}
+      {showArt && tracks.length !== 0 && <p>{fetchRandomTrack(tracks).name}</p>}
     </>
   );
 }
