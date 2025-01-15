@@ -84,7 +84,7 @@ function PlayButton({ accessToken, trackUri }) {
     <div className="play-button">
       <button
         onClick={() => {
-          if (isPaused) {
+          if (deviceId && isPaused) {
             console.log("Resuming playback");
             playTrack();
             setPaused(false);

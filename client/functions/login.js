@@ -3,7 +3,7 @@
  * Redirect the client to the spotify authorize url, but first set that user's
  * state in the cookie.
  */
-
+console.log("login");
 const querystring = require("querystring");
 const stateKey = "spotify_auth_state";
 const {
@@ -12,9 +12,17 @@ const {
   authorizePath,
   devMode,
 } = require("./utils/auth-config");
+console.log(redirectUri);
 
 // requested application authorizations
-const scopes = ["user-library-read", "user-top-read", "playlist-modify-public"];
+const scopes = [
+  "user-library-read",
+  "user-read-email",
+  "user-read-private",
+  "user-modify-playback-state",
+  "user-read-playback-state",
+  "streaming",
+];
 
 //  Generates a random string containing numbers and letters
 //  @param  {number} length The length of the string
@@ -46,7 +54,7 @@ exports.handler = async function (event, context) {
       response_type: "code",
       show_dialog: true,
       client_id: clientId,
-      scope: scopes.join("%20"),
+      scope: scopes.join(" "),
       redirect_uri: redirectUri,
       state: state,
     });

@@ -11,7 +11,7 @@ export default function Dashboard({ code }) {
   const [showPlayer, setShowPlayer] = useState(true);
   const [showArt, setShowArt] = useState(false);
   const [tracks, setTracks] = useState([]);
-  const accessToken = useAuth(code);
+  const accessToken = code;
   useEffect(() => {
     const fetchTracks = async () => {
       try {
