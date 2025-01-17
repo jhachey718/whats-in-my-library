@@ -1,5 +1,4 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import { getHashParams } from "./util/auth";
 import { Container } from "react-bootstrap";

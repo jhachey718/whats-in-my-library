@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import useAuth from "../useAuth";
 import ToggleButton from "./ToggleButton";
 import PlayButton from "./PlayButton";
 import { Container } from "react-bootstrap";
