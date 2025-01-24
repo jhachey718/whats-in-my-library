@@ -81,16 +81,18 @@ function PlayButton({ accessToken, tracks, showArt }) {
       if (response.ok) {
         console.log("Playback started");
         player.addListener("player_state_changed", (state) => {
-          if (state && !state.paused) {
-            // Track is playing, now seek
-            console.log(tracks[tracksPosition].duration_ms / 2);
-            player
-              .seek(Number(tracks[tracksPosition].duration_ms / 2))
-              .then(() => {
-                console.log("Seeked to halfway point");
-              });
+          if (state && !state.paused && state.position === 0) {
+            setTimeout(() => {
+              player
+                .seek(Number(tracks[tracksPosition].duration_ms / 2))
+                .then(() => {
+                  console.log("Seeked to halfway point");
+                })
+                .catch((err) => console.error("Error seeking:", err));
+            }, 500);
 
-            // Optionally, remove the listener after seeking
+            setPlayerStarted(true);
+
             player.removeListener("player_state_changed");
           }
         });
@@ -102,6 +104,27 @@ function PlayButton({ accessToken, tracks, showArt }) {
     }
   };
 
+  if (isPlayerStarted) {
+    const positionCheckInterval = setInterval(async () => {
+      const state = await player.getCurrentState();
+      if (state) {
+        const currentPosition = state.position; // Current playback position in ms
+        console.log(`Current position: ${currentPosition}ms`);
+
+        if (
+          currentPosition >=
+          Number(tracks[tracksPosition].duration_ms / 2) + 10000
+        ) {
+          clearInterval(positionCheckInterval); // Stop the interval
+          player.pause().then(() => {
+            setPaused(true);
+            player.seek(Number(tracks[tracksPosition].duration_ms / 2));
+          });
+        }
+      }
+    }, 200);
+  }
+
   return (
     <div className="play-button">
       {albumArt && showArt && (
@@ -112,7 +135,6 @@ function PlayButton({ accessToken, tracks, showArt }) {
           if (!isPlayerStarted) {
             console.log("Starting playback");
             playTrack();
-            setPlayerStarted(true);
             setPaused(false);
           } else if (isPaused) {
             console.log("Resuming playback");
@@ -130,9 +152,16 @@ function PlayButton({ accessToken, tracks, showArt }) {
       <button
         onClick={() => {
           player.nextTrack();
-          setTracksPositon((prev) => prev + 1);
-          console.log(tracksPosition);
-          setAlbumArt(tracks[tracksPosition].album.images[1].url);
+          setPaused(true);
+          setTracksPositon((prev) => {
+            const newPosition = prev + 1;
+            setAlbumArt(tracks[newPosition].album.images[1].url);
+            setTimeout(() => {
+              player.seek(Number(tracks[newPosition].duration_ms / 2));
+              player.pause();
+            }, 300);
+            return newPosition;
+          });
         }}
       >
         Next
