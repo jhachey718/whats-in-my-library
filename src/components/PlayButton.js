@@ -122,7 +122,7 @@ function PlayButton({ accessToken, tracks, showArt }) {
           });
         }
       }
-    }, 200);
+    }, 100);
   }
 
   return (
@@ -151,6 +151,7 @@ function PlayButton({ accessToken, tracks, showArt }) {
       </button>
       <button
         onClick={() => {
+          player.setVolume(0);
           player.nextTrack();
           setPaused(true);
           setTracksPositon((prev) => {
@@ -159,7 +160,8 @@ function PlayButton({ accessToken, tracks, showArt }) {
             setTimeout(() => {
               player.seek(Number(tracks[newPosition].duration_ms / 2));
               player.pause();
-            }, 300);
+              player.setVolume(0.5);
+            }, 500);
             return newPosition;
           });
         }}
