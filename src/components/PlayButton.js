@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 
-function PlayButton({ accessToken, trackUri }) {
+function PlayButton({ accessToken, tracks, showArt }) {
   const [player, setPlayer] = useState(undefined);
   const [deviceId, setDeviceId] = useState(null);
   const [isPaused, setPaused] = useState(true);
+  const [isPlayerStarted, setPlayerStarted] = useState(false);
+  const [trackUris, setTrackUris] = useState([]);
+  const [albumArt, setAlbumArt] = useState("");
+  const [tracksPosition, setTracksPositon] = useState(0);
 
   useEffect(() => {
+    let uris = [];
+    for (let i = 0; i < tracks.length; i++) {
+      uris.push(tracks[i].uri);
+    }
     const existingScript = document.querySelector(
       "script[src='https://sdk.scdn.co/spotify-player.js']"
     );
@@ -22,8 +30,9 @@ function PlayButton({ accessToken, trackUri }) {
         getOAuthToken: (cb) => cb(accessToken),
         volume: 0.5,
       });
-
+      setAlbumArt(tracks[tracksPosition].album.images[1].url);
       setPlayer(player);
+      setTrackUris(uris);
 
       player.addListener("ready", ({ device_id }) => {
         console.log("Player is ready with Device ID", device_id);
@@ -41,7 +50,6 @@ function PlayButton({ accessToken, trackUri }) {
 
       player.connect();
     };
-
     return () => {
       if (player) {
         player.disconnect();
@@ -65,13 +73,27 @@ function PlayButton({ accessToken, trackUri }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            uris: [trackUri],
+            uris: trackUris,
           }),
         }
       );
 
       if (response.ok) {
         console.log("Playback started");
+        player.addListener("player_state_changed", (state) => {
+          if (state && !state.paused) {
+            // Track is playing, now seek
+            console.log(tracks[tracksPosition].duration_ms / 2);
+            player
+              .seek(Number(tracks[tracksPosition].duration_ms / 2))
+              .then(() => {
+                console.log("Seeked to halfway point");
+              });
+
+            // Optionally, remove the listener after seeking
+            player.removeListener("player_state_changed");
+          }
+        });
       } else {
         console.error("Failed to start playback:", response.statusText);
       }
@@ -82,11 +104,19 @@ function PlayButton({ accessToken, trackUri }) {
 
   return (
     <div className="play-button">
+      {albumArt && showArt && (
+        <img src={albumArt} alt="Album Art" width="200" height="200" />
+      )}
       <button
         onClick={() => {
-          if (deviceId && isPaused) {
-            console.log("Resuming playback");
+          if (!isPlayerStarted) {
+            console.log("Starting playback");
             playTrack();
+            setPlayerStarted(true);
+            setPaused(false);
+          } else if (isPaused) {
+            console.log("Resuming playback");
+            player.togglePlay();
             setPaused(false);
           } else {
             console.log("Pausing playback");
@@ -96,6 +126,16 @@ function PlayButton({ accessToken, trackUri }) {
         }}
       >
         {isPaused ? "Play" : "Pause"}
+      </button>
+      <button
+        onClick={() => {
+          player.nextTrack();
+          setTracksPositon((prev) => prev + 1);
+          console.log(tracksPosition);
+          setAlbumArt(tracks[tracksPosition].album.images[1].url);
+        }}
+      >
+        Next
       </button>
     </div>
   );

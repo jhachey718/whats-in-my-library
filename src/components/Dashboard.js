@@ -3,7 +3,7 @@ import ToggleButton from "./ToggleButton";
 import PlayButton from "./PlayButton";
 import { Container } from "react-bootstrap";
 import { fetchAllTracks } from "../fetchAllTracks";
-import fetchRandomTrack from "../fetchRandomTrack";
+import shuffle from "../shuffle";
 
 export default function Dashboard({ code }) {
   const [showLyrics, setShowLyrics] = useState(false);
@@ -16,8 +16,7 @@ export default function Dashboard({ code }) {
       try {
         const fetchedTracks = await fetchAllTracks(accessToken);
         console.log("Fetched tracks:", fetchedTracks);
-        console.log("Random track:", fetchRandomTrack(fetchedTracks).name);
-        setTracks(fetchedTracks);
+        setTracks(shuffle(fetchedTracks));
       } catch (error) {
         console.error("Error in Dashboard fetching tracks:", error.message);
       }
@@ -52,12 +51,13 @@ export default function Dashboard({ code }) {
       {showPlayer && tracks.length !== 0 && (
         <PlayButton
           accessToken={accessToken}
-          trackUri={fetchRandomTrack(tracks).uri}
+          tracks={tracks}
+          showArt={showArt}
         />
       )}
       {showLyrics && <p>no</p>}
       {showPlayer && <p>Player</p>}
-      {showArt && tracks.length !== 0 && <p>{fetchRandomTrack(tracks).name}</p>}
+      {showArt && tracks.length !== 0 && <p>test</p>}
     </>
   );
 }
