@@ -127,8 +127,13 @@ function PlayButton({ accessToken, tracks, showArt }) {
 
   return (
     <div className="play-button">
-      {albumArt && showArt && (
-        <img src={albumArt} alt="Album Art" width="200" height="200" />
+      {albumArt && (
+        <img
+          src={showArt ? albumArt : "/default-cover-art.png"}
+          alt="Album Art"
+          width="200"
+          height="200"
+        />
       )}
       <button
         onClick={() => {
