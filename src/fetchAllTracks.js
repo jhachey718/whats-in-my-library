@@ -19,7 +19,9 @@ export async function fetchAllTracks(accessToken) {
       const tracks = await fetchSavedTracks(accessToken, offset, limit);
       if (tracks.length === 0) break;
 
-      allTracks = allTracks.concat(tracks);
+      for (let i = 0; i < tracks.length; i++) {
+        allTracks.push(tracks[i].track);
+      }
       offset += limit;
     }
 

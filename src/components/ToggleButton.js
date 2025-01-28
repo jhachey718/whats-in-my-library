@@ -1,4 +1,4 @@
-import React, { useState, newState } from "react";
+import React, { useState } from "react";
 
 const ToggleButton = ({ text, isToggled, onToggle }) => {
   const [toggled, setToggled] = useState(isToggled);
