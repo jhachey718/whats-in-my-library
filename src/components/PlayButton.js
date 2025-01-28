@@ -8,6 +8,7 @@ function PlayButton({ accessToken, tracks, showArt }) {
   const [trackUris, setTrackUris] = useState([]);
   const [albumArt, setAlbumArt] = useState("");
   const [tracksPosition, setTracksPositon] = useState(0);
+  const [isCooldown, setCooldown] = useState(false);
 
   useEffect(() => {
     let uris = [];
@@ -56,6 +57,28 @@ function PlayButton({ accessToken, tracks, showArt }) {
       }
     };
   }, [accessToken, player]);
+
+  const nextButtonHandler = () => {
+    if (isCooldown) return;
+
+    setCooldown(true);
+    setTimeout(() => {
+      setCooldown(false);
+    }, 2000);
+    player.setVolume(0);
+    player.nextTrack();
+    setPaused(true);
+    setTracksPositon((prev) => {
+      const newPosition = prev + 1;
+      setAlbumArt(tracks[newPosition].album.images[1].url);
+      setTimeout(() => {
+        player.seek(Number(tracks[newPosition].duration_ms / 2));
+        player.pause();
+        player.setVolume(0.5);
+      }, 500);
+      return newPosition;
+    });
+  };
 
   const playTrack = async () => {
     if (!deviceId) {
@@ -158,6 +181,7 @@ function PlayButton({ accessToken, tracks, showArt }) {
       >
         <img
           src={isPaused ? "/play_button.png" : "/pause_button.png"}
+          alt="Play/Pause Button"
           height="100"
           width="100"
         />
@@ -166,27 +190,7 @@ function PlayButton({ accessToken, tracks, showArt }) {
       {
         // Add cooldown to button
       }
-      <button
-        onClick={() => {
-          player.setVolume(0);
-          player.nextTrack();
-          setPaused(true);
-          setTracksPositon((prev) => {
-            const newPosition = prev + 1;
-            setAlbumArt(tracks[newPosition].album.images[1].url);
-            setTimeout(() => {
-              player.seek(Number(tracks[newPosition].duration_ms / 2));
-              player.pause();
-              player.setVolume(0.5);
-            }, 500);
-            return newPosition;
-          });
-        }}
-        // style={{
-        //   border: "none",
-        //   backgroundColor: "transparent",
-        // }}
-      >
+      <button onClick={nextButtonHandler} disabled={isCooldown}>
         Next
       </button>
     </div>
