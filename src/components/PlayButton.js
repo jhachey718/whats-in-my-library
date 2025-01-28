@@ -151,9 +151,21 @@ function PlayButton({ accessToken, tracks, showArt }) {
             setPaused(true);
           }
         }}
+        style={{
+          border: "none",
+          backgroundColor: "transparent",
+        }}
       >
-        {isPaused ? "Play" : "Pause"}
+        <img
+          src={isPaused ? "/play_button.png" : "/pause_button.png"}
+          height="100"
+          width="100"
+        />
       </button>
+
+      {
+        // Add cooldown to button
+      }
       <button
         onClick={() => {
           player.setVolume(0);
@@ -170,6 +182,10 @@ function PlayButton({ accessToken, tracks, showArt }) {
             return newPosition;
           });
         }}
+        // style={{
+        //   border: "none",
+        //   backgroundColor: "transparent",
+        // }}
       >
         Next
       </button>

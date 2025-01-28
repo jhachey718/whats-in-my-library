@@ -7,7 +7,6 @@ import shuffle from "../shuffle";
 
 export default function Dashboard({ code }) {
   const [showLyrics, setShowLyrics] = useState(false);
-  const [showPlayer, setShowPlayer] = useState(true);
   const [showArt, setShowArt] = useState(false);
   const [tracks, setTracks] = useState([]);
   const accessToken = code;
@@ -38,17 +37,12 @@ export default function Dashboard({ code }) {
           onToggle={(state) => setShowLyrics(state)}
         />
         <ToggleButton
-          text="Listen"
-          isToggled={true}
-          onToggle={(state) => setShowPlayer(state)}
-        />
-        <ToggleButton
           text="Art"
           isToggled={false}
           onToggle={(state) => setShowArt(state)}
         />
       </Container>
-      {showPlayer && tracks.length !== 0 && (
+      {tracks.length !== 0 && (
         <PlayButton
           accessToken={accessToken}
           tracks={tracks}
@@ -56,7 +50,6 @@ export default function Dashboard({ code }) {
         />
       )}
       {showLyrics && <p>no</p>}
-      {showPlayer && <p>Player</p>}
       {showArt && tracks.length !== 0 && <p>test</p>}
     </>
   );
