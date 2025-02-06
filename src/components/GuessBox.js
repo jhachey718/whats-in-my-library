@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { similarityPercentage } from "../util/guessValidator";
 function GuessBox({ placeholder, answer }) {
   const [guess, setGuess] = useState("");
   const [isCorrect, setIsCorrect] = useState(false);
@@ -14,7 +14,12 @@ function GuessBox({ placeholder, answer }) {
     //   }
     //   setIsCorrect(isAnyCorrect);
     // } else {
-    setIsCorrect(guess.toLowerCase() === answer.toLowerCase());
+    setIsCorrect(
+      similarityPercentage(
+        guess.toLowerCase().trim(),
+        answer.toLowerCase().trim()
+      ) >= 85
+    );
     // }
   }, [guess, answer]); // Runs whenever `guess` or `answer` changes
   useEffect(() => {
@@ -34,6 +39,9 @@ function GuessBox({ placeholder, answer }) {
         break;
     }
   }, [placeholder]);
+  useEffect(() => {
+    setGuess("");
+  }, [answer]);
 
   return (
     <div className="d-flex gap-3 justify-content-center">
