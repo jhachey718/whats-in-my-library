@@ -14,10 +14,12 @@
   
   .container .play {
     position: absolute;
+    margin-right: 50px;
     animation: keyframes-fill 0.3s;
   }
   
   .container .pause {
+    margin-right: 50px;
     position: absolute;
     display: none;
     animation: keyframes-fill 0.3s;
@@ -52,4 +54,47 @@
       transform: scale(1.1);
     }
   }
+
+  /* ------ Next Button ------ */
+  .Btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border: none;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    border-radius: 12px;
+    transition-duration: 0.3s;
+  }
+  
+  .svg {
+    width: 33px;
+    position: absolute;
+    right: 0;
+    margin-right: 50px;
+    fill: white;
+    transition-duration: 0.3s;
+  }
+  
+  .Btn:hover {
+    color: transparent;
+  }
+  
+  /* .Btn:hover svg {
+    right: 43%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    transition-duration: 0.3s;
+  } */
+  
+  .Btn:active {
+    transform: translate(3px, 3px);
+    transition-duration: 0.3s;
+  }
+  
   
