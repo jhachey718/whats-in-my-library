@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import GuessBox from "./GuessBox";
 
 function PlayButton({ accessToken, tracks, showArt }) {
   const [player, setPlayer] = useState(undefined);
@@ -80,6 +81,22 @@ function PlayButton({ accessToken, tracks, showArt }) {
     });
   };
 
+  const playButtonHandler = () => {
+    if (!isPlayerStarted) {
+      console.log("Starting playback");
+      playTrack();
+      setPaused(false);
+    } else if (isPaused) {
+      console.log("Resuming playback");
+      player.togglePlay();
+      setPaused(false);
+    } else {
+      console.log("Pausing playback");
+      player.togglePlay();
+      setPaused(true);
+    }
+  };
+
   const playTrack = async () => {
     if (!deviceId) {
       console.error("Device ID is not set.");
@@ -149,50 +166,54 @@ function PlayButton({ accessToken, tracks, showArt }) {
   }
 
   return (
-    <div className="play-button">
+    <div
+      className="play-button d-inline-flex flex-column gap-3 justify-content-center"
+      style={{ marginTop: "2rem" }}
+    >
       {albumArt && (
         <img
           src={showArt ? albumArt : "/default-cover-art.png"}
           alt="Album Art"
-          width="200"
-          height="200"
+          width="250"
+          height="250"
         />
       )}
-      <button
-        onClick={() => {
-          if (!isPlayerStarted) {
-            console.log("Starting playback");
-            playTrack();
-            setPaused(false);
-          } else if (isPaused) {
-            console.log("Resuming playback");
-            player.togglePlay();
-            setPaused(false);
-          } else {
-            console.log("Pausing playback");
-            player.togglePlay();
-            setPaused(true);
-          }
-        }}
-        style={{
-          border: "none",
-          backgroundColor: "transparent",
-        }}
-      >
-        <img
-          src={isPaused ? "/play_button.png" : "/pause_button.png"}
-          alt="Play/Pause Button"
-          height="100"
-          width="100"
-        />
-      </button>
+      <div className="d-inline-flex gap-3 justify-content-center align-items-center">
+        <button
+          onClick={playButtonHandler}
+          style={{
+            border: "none",
+            backgroundColor: "transparent",
+          }}
+        >
+          <img
+            src={isPaused ? "/play_button.png" : "/pause_button.png"}
+            alt="Play/Pause Button"
+            height="100"
+            width="100"
+          />
+        </button>
 
-      {
-        // Add cooldown to button
-      }
-      <button onClick={nextButtonHandler} disabled={isCooldown}>
-        Next
-      </button>
+        {
+          // Add cooldown to button
+        }
+        <button
+          onClick={nextButtonHandler}
+          disabled={isCooldown}
+          style={{
+            border: "none",
+            backgroundColor: "transparent",
+          }}
+        >
+          <img
+            src="/next_button.png"
+            alt="Skip Button"
+            height="100"
+            width="100"
+          ></img>
+        </button>
+      </div>
+      <GuessBox />
     </div>
   );
 }
