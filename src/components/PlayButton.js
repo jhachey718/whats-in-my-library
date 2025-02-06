@@ -153,7 +153,6 @@ function PlayButton({ accessToken, tracks, showArt }) {
       const state = await player.getCurrentState();
       if (state) {
         const currentPosition = state.position; // Current playback position in ms
-        console.log(`Current position: ${currentPosition}ms`);
 
         if (
           currentPosition >=
@@ -175,48 +174,67 @@ function PlayButton({ accessToken, tracks, showArt }) {
       style={{ marginTop: "2rem" }}
     >
       {albumArt && (
-        <img
-          src={showArt ? albumArt : "/default-cover-art.png"}
-          alt="Album Art"
-          width="250"
-          height="250"
-        />
-      )}
-      <div className="d-inline-flex gap-3 justify-content-center align-items-center">
-        <label className="container">
-          <input
-            type="checkbox"
-            checked={!isPaused}
-            onClick={playButtonHandler}
+        <div className="d-flex justify-content-center">
+          <img
+            src={showArt ? albumArt : "/default-cover-art.png"}
+            alt="Album Art"
+            width="250"
+            height="250"
           />
-          <svg
-            className="play"
-            xmlns="http://www.w3.org/2000/svg"
-            height="1em"
-            viewBox="0 0 384 512"
+        </div>
+      )}
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ gap: "7rem" }}
+      >
+        <div className="d-flex justify-content-center">
+          <label className="container">
+            <input
+              type="checkbox"
+              checked={!isPaused}
+              onChange={playButtonHandler}
+            />
+            <svg
+              className="play"
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 384 512"
+            >
+              <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path>
+            </svg>
+            <svg
+              className="pause"
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 320 512"
+            >
+              <path d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"></path>
+            </svg>
+          </label>
+        </div>
+        <div className="d-flex justify-content-center">
+          <button
+            className="Btn"
+            onClick={nextButtonHandler}
+            disabled={isCooldown}
           >
-            <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path>
-          </svg>
-          <svg
-            className="pause"
-            xmlns="http://www.w3.org/2000/svg"
-            height="1em"
-            viewBox="0 0 320 512"
-          >
-            <path d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"></path>
-          </svg>
-        </label>
-        <button
-          className="Btn"
-          onClick={nextButtonHandler}
-          disabled={isCooldown}
-        >
-          <svg viewBox="0 0 320 512" className="svg">
-            <path d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4l192 160L256 241V96c0-17.7 14.3-32 32-32s32 14.3 32 32V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V271l-11.5 9.6-192 160z"></path>
-          </svg>
-        </button>
+            <svg viewBox="0 0 320 512" className="svg" height="3.5em">
+              <path d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4l192 160L256 241V96c0-17.7 14.3-32 32-32s32 14.3 32 32V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V271l-11.5 9.6-192 160z"></path>
+            </svg>
+          </button>
+        </div>
       </div>
-      <GuessBox />
+      <div className="d-inline-flex flex-column gap-3 justify-content-center">
+        <GuessBox
+          placeholder="Artist"
+          answer={tracks[tracksPosition].artists[0].name}
+        />
+        <GuessBox placeholder="Song" answer={tracks[tracksPosition].name} />
+        <GuessBox
+          placeholder="Album"
+          answer={tracks[tracksPosition].album.name}
+        />
+      </div>
     </div>
   );
 }

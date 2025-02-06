@@ -43,11 +43,12 @@ function App() {
         backgroundImage: "url('/background.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        height: "100vh",
+        minHeight: "100vh",
+        height: "auto",
         width: "100vw",
       }}
     >
-      <h1 className="text-center text-white" style={{ marginTop: "4rem" }}>
+      <h1 className="text-center text-white" style={{ marginTop: "3rem" }}>
         What's in my Library?
       </h1>
       {params ? (

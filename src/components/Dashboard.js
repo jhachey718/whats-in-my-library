@@ -29,7 +29,7 @@ export default function Dashboard({ code }) {
     <>
       <Container
         className="d-inline-flex gap-3 justify-content-center"
-        style={{ marginTop: "2rem" }}
+        style={{ marginTop: "1rem" }}
       >
         <ToggleButton
           text="Lyrics"
@@ -49,8 +49,6 @@ export default function Dashboard({ code }) {
           showArt={showArt}
         />
       )}
-      {showLyrics && <p>no</p>}
-      {showArt && tracks.length !== 0 && <p>test</p>}
     </>
   );
 }

@@ -14,12 +14,12 @@
   
   .container .play {
     position: absolute;
-    margin-right: 50px;
+    /* margin-right: 80px; */
     animation: keyframes-fill 0.3s;
   }
   
   .container .pause {
-    margin-right: 50px;
+    /* margin-right: 80px; */
     position: absolute;
     display: none;
     animation: keyframes-fill 0.3s;
@@ -61,7 +61,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 45px;
     height: 45px;
     border: none;
     background: transparent;
@@ -72,10 +71,9 @@
   }
   
   .svg {
-    width: 33px;
     position: absolute;
     right: 0;
-    margin-right: 50px;
+    /* margin-right: 70px; */
     fill: white;
     transition-duration: 0.3s;
   }
