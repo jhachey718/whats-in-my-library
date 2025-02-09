@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import GuessBox from "./GuessBox";
 import "./PlayButton.css";
 
-function PlayButton({ accessToken, tracks, showArt }) {
+function PlayButton({ accessToken, tracks }) {
   const [player, setPlayer] = useState(undefined);
   const [deviceId, setDeviceId] = useState(null);
   const [isPaused, setPaused] = useState(true);
@@ -11,6 +11,7 @@ function PlayButton({ accessToken, tracks, showArt }) {
   const [albumArt, setAlbumArt] = useState("");
   const [tracksPosition, setTracksPositon] = useState(0);
   const [isCooldown, setCooldown] = useState(false);
+  const [showArt, setShowArt] = useState(false);
 
   useEffect(() => {
     let uris = [];
@@ -231,6 +232,7 @@ function PlayButton({ accessToken, tracks, showArt }) {
         <GuessBox
           placeholder="Album"
           answer={tracks[tracksPosition].album.name}
+          setShowArt={setShowArt}
         />
       </div>
     </div>

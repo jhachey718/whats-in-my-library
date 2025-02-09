@@ -43,11 +43,7 @@ export default function Dashboard({ code }) {
         />
       </Container>
       {tracks.length !== 0 && (
-        <PlayButton
-          accessToken={accessToken}
-          tracks={tracks}
-          showArt={showArt}
-        />
+        <PlayButton accessToken={accessToken} tracks={tracks} />
       )}
     </>
   );
