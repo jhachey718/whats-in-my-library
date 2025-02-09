@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import GuessBox from "./GuessBox";
 import "./PlayButton.css";
 
@@ -12,6 +12,7 @@ function PlayButton({ accessToken, tracks }) {
   const [tracksPosition, setTracksPositon] = useState(0);
   const [isCooldown, setCooldown] = useState(false);
   const [showArt, setShowArt] = useState(false);
+  const positionCheckIntervalRef = useRef(null);
 
   useEffect(() => {
     let uris = [];
@@ -77,9 +78,9 @@ function PlayButton({ accessToken, tracks }) {
       setAlbumArt(tracks[newPosition].album.images[1].url);
       setTimeout(async () => {
         await player.seek(Number(tracks[newPosition].duration_ms / 2));
-        await player.resume();
         await player.setVolume(0.5);
-      }, 1000);
+        await player.resume();
+      }, 500);
       return newPosition;
     });
   };
@@ -149,7 +150,10 @@ function PlayButton({ accessToken, tracks }) {
   };
 
   if (isPlayerStarted) {
-    const positionCheckInterval = setInterval(async () => {
+    if (positionCheckIntervalRef.current) {
+      clearInterval(positionCheckIntervalRef.current);
+    }
+    positionCheckIntervalRef.current = setInterval(async () => {
       const state = await player.getCurrentState();
       if (state) {
         const currentPosition = state.position; // Current playback position in ms
@@ -159,7 +163,8 @@ function PlayButton({ accessToken, tracks }) {
             Number(tracks[tracksPosition].duration_ms / 2) + 10000 &&
           !isCooldown
         ) {
-          clearInterval(positionCheckInterval); // Stop the interval
+          clearInterval(positionCheckIntervalRef.current); // Stop the interval
+          positionCheckIntervalRef.current = null; // Reset reference
           player.pause().then(() => {
             setPaused(true);
             player.seek(Number(tracks[tracksPosition].duration_ms / 2));
