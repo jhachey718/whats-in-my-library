@@ -71,13 +71,13 @@ function PlayButton({ accessToken, tracks }) {
     await player.pause();
     await player.setVolume(0.0);
     await player.nextTrack();
-    setPaused(true);
+    setPaused(false);
     setTracksPositon((prev) => {
       const newPosition = prev + 1;
       setAlbumArt(tracks[newPosition].album.images[1].url);
       setTimeout(async () => {
         await player.seek(Number(tracks[newPosition].duration_ms / 2));
-        await player.pause();
+        await player.resume();
         await player.setVolume(0.5);
       }, 1000);
       return newPosition;
@@ -85,6 +85,7 @@ function PlayButton({ accessToken, tracks }) {
   };
 
   const playButtonHandler = () => {
+    // if (isCooldown) return;
     if (!isPlayerStarted) {
       console.log("Starting playback");
       playTrack();
@@ -155,7 +156,8 @@ function PlayButton({ accessToken, tracks }) {
 
         if (
           currentPosition >=
-          Number(tracks[tracksPosition].duration_ms / 2) + 10000
+            Number(tracks[tracksPosition].duration_ms / 2) + 10000 &&
+          !isCooldown
         ) {
           clearInterval(positionCheckInterval); // Stop the interval
           player.pause().then(() => {
@@ -164,7 +166,7 @@ function PlayButton({ accessToken, tracks }) {
           });
         }
       }
-    }, 100);
+    }, 1000);
   }
 
   return (

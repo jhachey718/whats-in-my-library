@@ -50,6 +50,9 @@ function GuessBox({ placeholder, answer, setShowArt }) {
   }, [placeholder]);
   useEffect(() => {
     setGuess("");
+    if (setShowArt) {
+      setShowArt(false);
+    }
     if (Array.isArray(answer)) {
       setAnswerString(answer.map((a) => a.name).join(", "));
     } else {
