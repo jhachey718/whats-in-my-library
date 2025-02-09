@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { similarityPercentage } from "../util/guessValidator";
-function GuessBox({ placeholder, answer, setShowArt }) {
+function GuessBox({ placeholder, answer, setShowArt, revealAnswer }) {
   const [guess, setGuess] = useState("");
   const [isCorrect, setIsCorrect] = useState(false);
   const [pointValue, setPointValue] = useState("");
   const [answerString, setAnswerString] = useState("");
   useEffect(() => {
+    if (revealAnswer) {
+      setIsCorrect(true);
+    }
+  }, [revealAnswer]);
+  useEffect(() => {
     if (isCorrect && setShowArt) {
       setShowArt(true);
     }
-  }, [isCorrect]);
+  }, [isCorrect, revealAnswer]);
   useEffect(() => {
     // Check if the guess matches the answer
     if (Array.isArray(answer)) {
@@ -58,7 +63,7 @@ function GuessBox({ placeholder, answer, setShowArt }) {
     } else {
       setAnswerString(answer);
     }
-  }, [answer]);
+  }, [answer, revealAnswer]);
 
   return (
     <div className="d-flex gap-3 justify-content-center">

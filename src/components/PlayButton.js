@@ -12,6 +12,7 @@ function PlayButton({ accessToken, tracks }) {
   const [tracksPosition, setTracksPositon] = useState(0);
   const [isCooldown, setCooldown] = useState(false);
   const [showArt, setShowArt] = useState(false);
+  const [revealAnswers, setRevealAnswers] = useState(false);
   const positionCheckIntervalRef = useRef(null);
 
   useEffect(() => {
@@ -65,6 +66,7 @@ function PlayButton({ accessToken, tracks }) {
   const nextButtonHandler = async () => {
     if (isCooldown || !isPlayerStarted) return;
 
+    setRevealAnswers(false);
     setCooldown(true);
     setTimeout(() => {
       setCooldown(false);
@@ -234,13 +236,24 @@ function PlayButton({ accessToken, tracks }) {
         <GuessBox
           placeholder="Artist"
           answer={tracks[tracksPosition].artists}
+          revealAnswer={revealAnswers}
         />
-        <GuessBox placeholder="Song" answer={tracks[tracksPosition].name} />
+        <GuessBox
+          placeholder="Song"
+          answer={tracks[tracksPosition].name}
+          revealAnswer={revealAnswers}
+        />
         <GuessBox
           placeholder="Album"
           answer={tracks[tracksPosition].album.name}
           setShowArt={setShowArt}
+          revealAnswer={revealAnswers}
         />
+      </div>
+      <div className="d-inline-flex justify-content-center">
+        <button className="btn btn-dark" onClick={() => setRevealAnswers(true)}>
+          Reveal Answers
+        </button>
       </div>
     </div>
   );
