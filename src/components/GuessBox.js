@@ -4,23 +4,28 @@ function GuessBox({ placeholder, answer }) {
   const [guess, setGuess] = useState("");
   const [isCorrect, setIsCorrect] = useState(false);
   const [pointValue, setPointValue] = useState("");
+  const [answerString, setAnswerString] = useState("");
 
   useEffect(() => {
     // Check if the guess matches the answer
-    // if (Array.isArray(answer)) {
-    //   let isAnyCorrect = false;
-    //   for (let i = 0; i < answer.length; i++) {
-    //     isAnyCorrect = guess.toLowerCase() === answer[i].name.toLowerCase();
-    //   }
-    //   setIsCorrect(isAnyCorrect);
-    // } else {
-    setIsCorrect(
-      similarityPercentage(
-        guess.toLowerCase().trim(),
-        answer.toLowerCase().trim()
-      ) >= 85
-    );
-    // }
+    if (Array.isArray(answer)) {
+      setIsCorrect(
+        answer.some(
+          (ans) =>
+            similarityPercentage(
+              guess.toLowerCase().trim(),
+              ans.name.toLowerCase().trim()
+            ) >= 85
+        )
+      );
+    } else {
+      setIsCorrect(
+        similarityPercentage(
+          guess.toLowerCase().trim(),
+          answer.toLowerCase().trim()
+        ) >= 85
+      );
+    }
   }, [guess, answer]); // Runs whenever `guess` or `answer` changes
   useEffect(() => {
     // Set point value based on the placeholder
@@ -41,6 +46,11 @@ function GuessBox({ placeholder, answer }) {
   }, [placeholder]);
   useEffect(() => {
     setGuess("");
+    if (Array.isArray(answer)) {
+      setAnswerString(answer.map((a) => a.name).join(", "));
+    } else {
+      setAnswerString(answer);
+    }
   }, [answer]);
 
   return (
@@ -50,7 +60,7 @@ function GuessBox({ placeholder, answer }) {
         style={{ width: "15rem", marginLeft: "2rem" }}
         type="text"
         placeholder={placeholder}
-        value={isCorrect ? answer : guess}
+        value={isCorrect ? answerString : guess}
         onChange={(e) => setGuess(e.target.value)}
         readOnly={isCorrect}
       />

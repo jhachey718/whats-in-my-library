@@ -227,7 +227,7 @@ function PlayButton({ accessToken, tracks, showArt }) {
       <div className="d-inline-flex flex-column gap-3 justify-content-center">
         <GuessBox
           placeholder="Artist"
-          answer={tracks[tracksPosition].artists[0].name}
+          answer={tracks[tracksPosition].artists}
         />
         <GuessBox placeholder="Song" answer={tracks[tracksPosition].name} />
         <GuessBox
