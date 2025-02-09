@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { similarityPercentage } from "../util/guessValidator";
-function GuessBox({ placeholder, answer, setShowArt, revealAnswer }) {
+function GuessBox({ placeholder, answer, setShowArt, revealAnswer, setScore }) {
   const [guess, setGuess] = useState("");
   const [isCorrect, setIsCorrect] = useState(false);
   const [pointValue, setPointValue] = useState("");
@@ -9,12 +9,31 @@ function GuessBox({ placeholder, answer, setShowArt, revealAnswer }) {
     if (revealAnswer) {
       setIsCorrect(true);
     }
+    if (setShowArt && revealAnswer) {
+      setShowArt(true);
+    }
   }, [revealAnswer]);
   useEffect(() => {
     if (isCorrect && setShowArt) {
       setShowArt(true);
     }
-  }, [isCorrect, revealAnswer]);
+    if (isCorrect && !revealAnswer) {
+      switch (placeholder) {
+        case "Artist":
+          setScore((prevScore) => prevScore + 1);
+          break;
+        case "Song":
+          setScore((prevScore) => prevScore + 2);
+          break;
+        case "Album":
+          setScore((prevScore) => prevScore + 3);
+          break;
+        default:
+          setScore((prevScore) => prevScore + 0);
+          break;
+      }
+    }
+  }, [isCorrect]);
   useEffect(() => {
     // Check if the guess matches the answer
     if (Array.isArray(answer)) {
@@ -63,7 +82,7 @@ function GuessBox({ placeholder, answer, setShowArt, revealAnswer }) {
     } else {
       setAnswerString(answer);
     }
-  }, [answer, revealAnswer]);
+  }, [answer]);
 
   return (
     <div className="d-flex gap-3 justify-content-center">

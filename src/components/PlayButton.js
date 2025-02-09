@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import GuessBox from "./GuessBox";
 import "./PlayButton.css";
 
-function PlayButton({ accessToken, tracks }) {
+function PlayButton({ accessToken, tracks, setScore }) {
   const [player, setPlayer] = useState(undefined);
   const [deviceId, setDeviceId] = useState(null);
   const [isPaused, setPaused] = useState(true);
@@ -237,17 +237,20 @@ function PlayButton({ accessToken, tracks }) {
           placeholder="Artist"
           answer={tracks[tracksPosition].artists}
           revealAnswer={revealAnswers}
+          setScore={setScore}
         />
         <GuessBox
           placeholder="Song"
           answer={tracks[tracksPosition].name}
           revealAnswer={revealAnswers}
+          setScore={setScore}
         />
         <GuessBox
           placeholder="Album"
           answer={tracks[tracksPosition].album.name}
           setShowArt={setShowArt}
           revealAnswer={revealAnswers}
+          setScore={setScore}
         />
       </div>
       <div className="d-inline-flex justify-content-center">
