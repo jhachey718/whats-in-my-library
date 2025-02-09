@@ -60,27 +60,25 @@ function PlayButton({ accessToken, tracks, showArt }) {
     };
   }, [accessToken, player]);
 
-  const nextButtonHandler = () => {
-    if (isCooldown) return;
+  const nextButtonHandler = async () => {
+    if (isCooldown || !isPlayerStarted) return;
 
     setCooldown(true);
     setTimeout(() => {
       setCooldown(false);
     }, 3000);
-    player.pause();
-    player.setVolume(0.0);
-    player.nextTrack();
+    await player.pause();
+    await player.setVolume(0.0);
+    await player.nextTrack();
     setPaused(true);
     setTracksPositon((prev) => {
       const newPosition = prev + 1;
       setAlbumArt(tracks[newPosition].album.images[1].url);
-      setTimeout(() => {
-        player.seek(Number(tracks[newPosition].duration_ms / 2));
-      }, 500);
-      setTimeout(() => {
-        player.pause();
-        player.setVolume(0.5);
-      }, 800);
+      setTimeout(async () => {
+        await player.seek(Number(tracks[newPosition].duration_ms / 2));
+        await player.pause();
+        await player.setVolume(0.5);
+      }, 1000);
       return newPosition;
     });
   };
