@@ -6,12 +6,11 @@ import { fetchRandomTracks } from "../fetchAllTracks";
 import shuffle from "../shuffle";
 import Score from "./Score";
 
-export default function Dashboard({ code }) {
+export default function Dashboard({ accessToken }) {
   const [showLyrics, setShowLyrics] = useState(false);
   const [showArt, setShowArt] = useState(false);
   const [tracks, setTracks] = useState([]);
   const [score, setScore] = useState(0);
-  const accessToken = code;
   useEffect(() => {
     const fetchTracks = async () => {
       try {

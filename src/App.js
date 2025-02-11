@@ -36,6 +36,18 @@ function App() {
       });
   };
 
+  // Timer to refresh token every 55 minutes
+  useEffect(() => {
+    if (params) {
+      const timer = setTimeout(() => {
+        refreshToken();
+      }, 55 * 60 * 1000); // 55 minutes in milliseconds
+
+      // Cleanup the timer when the component unmounts or params change
+      return () => clearTimeout(timer);
+    }
+  }, [params]);
+
   return (
     <div
       className="d-flex flex-column align-items-center"
@@ -52,7 +64,7 @@ function App() {
         What's in my Library?
       </h1>
       {params ? (
-        <Dashboard code={params.access_token} />
+        <Dashboard accessToken={params.access_token} />
       ) : (
         <Container
           className="d-flex justify-content-center align-items-center"

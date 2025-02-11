@@ -33,7 +33,7 @@ function PlayButton({ accessToken, tracks, setScore }) {
     window.onSpotifyWebPlaybackSDKReady = () => {
       const player = new window.Spotify.Player({
         name: "Web Playback SDK",
-        getOAuthToken: (cb) => cb(accessToken),
+        getOAuthToken: async (cb) => cb(accessToken),
         volume: 0.5,
       });
       setAlbumArt(tracks[tracksPosition].album.images[1].url);
