@@ -35,8 +35,22 @@ function GuessBox({ placeholder, answer, setShowArt, revealAnswer, setScore }) {
     }
   }, [isCorrect]);
   useEffect(() => {
+    if (placeholder === "Album" || placeholder === "Song") {
+      let newAnswer = "";
+      if (placeholder === "Album") {
+        newAnswer = answer.toLowerCase().split(/ -|\(/)[0].trim();
+      } else {
+        newAnswer = answer
+          .toLowerCase()
+          .split(/ - | \(feat| \(remast/i)[0]
+          .trim();
+      }
+      setIsCorrect(
+        similarityPercentage(guess.toLowerCase().trim(), newAnswer) >= 85
+      );
+    }
     // Check if the guess matches the answer
-    if (Array.isArray(answer)) {
+    else if (Array.isArray(answer)) {
       setIsCorrect(
         answer.some(
           (ans) =>
