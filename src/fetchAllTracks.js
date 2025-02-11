@@ -1,5 +1,9 @@
 function shuffleArray(array) {
-  return array.sort(() => Math.random() - 0.5);
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 async function fetchSavedTracks(accessToken, limit) {
@@ -79,7 +83,7 @@ async function fetchPlaylistTracks(accessToken, playlistId, limit) {
 
 export async function fetchRandomTracks(accessToken) {
   let likedTracks = await fetchSavedTracks(accessToken, 100);
-  let playlists = await fetchUserPlaylists(accessToken, 50);
+  let playlists = await fetchUserPlaylists(accessToken, 100);
   playlists = await shuffleArray(playlists);
   let allPlaylistTracks = [];
 
@@ -95,7 +99,7 @@ export async function fetchRandomTracks(accessToken) {
   console.log(allPlaylistTracks);
 
   // Combine liked tracks and playlist tracks
-  let allTracks = [...likedTracks, ...allPlaylistTracks];
+  let allTracks = [...allPlaylistTracks, ...likedTracks];
 
   // Shuffle the combined list of all tracks
   allTracks = shuffleArray(allTracks);
