@@ -2,9 +2,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Dashboard from "./components/Dashboard";
 import { getHashParams } from "./util/auth";
 import { Container } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 function App() {
   const [params, setParams] = useState();
+  const hasRefreshed = useRef(false);
 
   // when the component mounts, check the URL for authentication
   // data, if it is present, update the parameters state
@@ -17,11 +18,14 @@ function App() {
       } else {
         setParams(authData);
       }
+    } else if (window.location.pathname !== "/") {
+      window.location.replace("/");
     }
   }, []);
 
   // get new parameters, using the current refresh token
   const refreshToken = () => {
+    console.log("Refreshing...");
     return fetch(
       `/.netlify/functions/refresh_token?refresh_token=${params.refresh_token}`
     )
@@ -38,6 +42,13 @@ function App() {
 
   // Timer to refresh token every 55 minutes
   useEffect(() => {
+    console.log("Updated params after refresh:", params);
+    if (!hasRefreshed.current && params) {
+      hasRefreshed.current = true;
+      setTimeout(() => {
+        refreshToken();
+      }, 10000);
+    }
     if (params) {
       const timer = setTimeout(() => {
         refreshToken();
