@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ToggleButton from "./ToggleButton";
 import PlayButton from "./PlayButton";
 import { Container } from "react-bootstrap";
-import { fetchAllTracks } from "../fetchAllTracks";
+import { fetchRandomTracks } from "../fetchAllTracks";
 import shuffle from "../shuffle";
 import Score from "./Score";
 
@@ -15,25 +15,29 @@ export default function Dashboard({ code }) {
   useEffect(() => {
     const fetchTracks = async () => {
       try {
-        const fetchedTracks = await fetchAllTracks(accessToken);
+        // const fetchedTracks = await fetchAllTracks(accessToken);
+        const fetchedTracks = await fetchRandomTracks(accessToken);
         console.log("Fetched tracks:", fetchedTracks);
-        setTracks(shuffle(fetchedTracks));
+        // setTracks(shuffle(fetchedTracks));
+        setTracks(fetchedTracks);
       } catch (error) {
         console.error("Error in Dashboard fetching tracks:", error.message);
       }
     };
-
     if (accessToken) {
       fetchTracks();
     }
   }, [accessToken]);
   return (
     <>
+      {tracks.length === 0 && (
+        <h2 className="text-white">Fetching Tracks...</h2>
+      )}
       <Container
         className="d-inline-flex gap-3 justify-content-center"
         style={{ marginTop: "1rem" }}
       >
-        <ToggleButton
+        {/* <ToggleButton
           text="Lyrics"
           isToggled={false}
           onToggle={(state) => setShowLyrics(state)}
@@ -42,7 +46,7 @@ export default function Dashboard({ code }) {
           text="Art"
           isToggled={false}
           onToggle={(state) => setShowArt(state)}
-        />
+        /> */}
       </Container>
       {tracks.length !== 0 && (
         <PlayButton

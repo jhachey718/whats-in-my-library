@@ -22,6 +22,7 @@ const scopes = [
   "user-modify-playback-state",
   "user-read-playback-state",
   "streaming",
+  "playlist-read-private",
 ];
 
 //  Generates a random string containing numbers and letters
