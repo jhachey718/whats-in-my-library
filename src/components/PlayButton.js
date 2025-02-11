@@ -61,7 +61,15 @@ function PlayButton({ accessToken, tracks, setScore }) {
         player.disconnect();
       }
     };
-  }, [accessToken, player]);
+  }, [tracks]);
+
+  useEffect(() => {
+    if (player) {
+      player._options.getOAuthToken = async (cb) => {
+        cb(accessToken); // Update the token in the player
+      };
+    }
+  }, [accessToken]);
 
   const nextButtonHandler = async () => {
     if (isCooldown || !isPlayerStarted) return;

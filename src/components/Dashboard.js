@@ -13,6 +13,7 @@ export default function Dashboard({ accessToken }) {
   const [score, setScore] = useState(0);
   useEffect(() => {
     const fetchTracks = async () => {
+      if (tracks.length > 0) return;
       try {
         // const fetchedTracks = await fetchAllTracks(accessToken);
         const fetchedTracks = await fetchRandomTracks(accessToken);
