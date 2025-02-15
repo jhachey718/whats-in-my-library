@@ -88,6 +88,17 @@ function Player({ accessToken, tracks, score, setScore, millisecondsPlayed }) {
         await player.setVolume(0.5);
         await player.resume();
       }, 500);
+      if (millisecondsPlayed === 1000) {
+        setTimeout(async () => {
+          setPaused(true);
+          await player.pause();
+          if (tracks[newPosition].duration_ms > 20000 + millisecondsPlayed) {
+            await player.seek(20000);
+          } else {
+            await player.seek(0);
+          }
+        }, millisecondsPlayed + 900);
+      }
       return newPosition;
     });
   };
@@ -183,7 +194,7 @@ function Player({ accessToken, tracks, score, setScore, millisecondsPlayed }) {
           });
         }
       }
-    }, 1000);
+    }, 500);
   }
 
   return (

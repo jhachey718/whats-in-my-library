@@ -7,9 +7,10 @@ import shuffle from "../shuffle";
 import Score from "./Score";
 
 export default function Dashboard({ accessToken }) {
-  const [millisecondsPlayed, setmillisecondsPlayed] = useState(10000);
+  const [millisecondsPlayed, setMillisecondsPlayed] = useState(1000);
   const [tracks, setTracks] = useState([]);
   const [score, setScore] = useState(0);
+  const [selected, setSelected] = useState("option1");
   useEffect(() => {
     const fetchTracks = async () => {
       if (tracks.length > 0) return;
@@ -32,21 +33,55 @@ export default function Dashboard({ accessToken }) {
       {tracks.length === 0 && (
         <h2 className="text-white">Fetching Tracks...</h2>
       )}
-      <Container
-        className="d-inline-flex gap-3 justify-content-center"
+      <div
+        className="btn-group btn-group-toggle d-inline-flex justify-content-center"
+        data-toggle="buttons"
         style={{ marginTop: "1rem" }}
       >
-        {/* <ToggleButton
-          text="Lyrics"
-          isToggled={false}
-          onToggle={(state) => setShowLyrics(state)}
-        />
-        <ToggleButton
-          text="Art"
-          isToggled={false}
-          onToggle={(state) => setShowArt(state)}
-        /> */}
-      </Container>
+        <label
+          className={`btn btn-dark ${selected === "option1" ? "active" : ""}`}
+        >
+          <input
+            type="radio"
+            name="options"
+            id="option1"
+            autoComplete="off"
+            checked={selected === "option1"}
+            onChange={() => setSelected("option1")}
+            style={{ display: "none" }}
+          />
+          1s
+        </label>
+        <label
+          className={`btn btn-dark ${selected === "option2" ? "active" : ""}`}
+        >
+          <input
+            type="radio"
+            name="options"
+            id="option2"
+            autoComplete="off"
+            checked={selected === "option2"}
+            onChange={() => setSelected("option2")}
+            style={{ display: "none" }}
+          />
+          5s
+        </label>
+        <label
+          className={`btn btn-dark ${selected === "option3" ? "active" : ""}`}
+        >
+          <input
+            type="radio"
+            name="options"
+            id="option3"
+            autoComplete="off"
+            checked={selected === "option3"}
+            onChange={() => setSelected("option3")}
+            style={{ display: "none" }}
+          />
+          10s
+        </label>
+      </div>
+
       {tracks.length !== 0 && (
         <Player
           accessToken={accessToken}

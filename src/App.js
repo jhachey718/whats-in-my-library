@@ -42,7 +42,6 @@ function App() {
 
   // Timer to refresh token every 55 minutes
   useEffect(() => {
-    console.log("Updated params after refresh:", params);
     if (!hasRefreshed.current && params) {
       hasRefreshed.current = true;
       setTimeout(() => {
