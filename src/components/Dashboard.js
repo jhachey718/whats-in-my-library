@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ToggleButton from "./ToggleButton";
-import PlayButton from "./PlayButton";
+import Player from "./Player";
 import { Container } from "react-bootstrap";
 import { fetchRandomTracks } from "../fetchAllTracks";
 import shuffle from "../shuffle";
@@ -49,11 +49,7 @@ export default function Dashboard({ accessToken }) {
         /> */}
       </Container>
       {tracks.length !== 0 && (
-        <PlayButton
-          accessToken={accessToken}
-          tracks={tracks}
-          setScore={setScore}
-        />
+        <Player accessToken={accessToken} tracks={tracks} setScore={setScore} />
       )}
       <Score scoreValue={score} />
     </>

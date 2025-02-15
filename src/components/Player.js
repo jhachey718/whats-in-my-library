@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import GuessBox from "./GuessBox";
-import "./PlayButton.css";
+import "./Player.css";
 
-function PlayButton({ accessToken, tracks, setScore }) {
+function Player({ accessToken, tracks, setScore }) {
   const [player, setPlayer] = useState(undefined);
   const [deviceId, setDeviceId] = useState(null);
   const [isPaused, setPaused] = useState(true);
@@ -270,4 +270,4 @@ function PlayButton({ accessToken, tracks, setScore }) {
   );
 }
 
-export default PlayButton;
+export default Player;
