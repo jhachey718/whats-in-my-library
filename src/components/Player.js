@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import GuessBox from "./GuessBox";
 import "./Player.css";
 
-function Player({ accessToken, tracks, score, setScore }) {
+function Player({ accessToken, tracks, score, setScore, millisecondsPlayed }) {
   const [player, setPlayer] = useState(undefined);
   const [deviceId, setDeviceId] = useState(null);
   const [isPaused, setPaused] = useState(true);
@@ -46,15 +46,6 @@ function Player({ accessToken, tracks, score, setScore }) {
         setDeviceId(device_id);
       });
 
-      // player.addListener("not_ready", ({ device_id }) => {
-      //   console.log("Device ID has gone offline", device_id);
-      // });
-
-      // player.addListener("player_state_changed", (state) => {
-      //   if (!state) return;
-      //   setPaused(state.paused);
-      // });
-
       player.connect();
     };
     return () => {
@@ -74,7 +65,7 @@ function Player({ accessToken, tracks, score, setScore }) {
 
   const nextButtonHandler = async () => {
     if (isCooldown || !isPlayerStarted) return;
-    if (score == prevScore) {
+    if (score === prevScore) {
       setScore(0);
     }
     setPrevScore(score);
@@ -91,7 +82,9 @@ function Player({ accessToken, tracks, score, setScore }) {
       const newPosition = prev + 1;
       setAlbumArt(tracks[newPosition].album.images[1].url);
       setTimeout(async () => {
-        await player.seek(Number(tracks[newPosition].duration_ms / 2));
+        if (tracks[newPosition].duration_ms > 20000 + millisecondsPlayed) {
+          await player.seek(20000);
+        }
         await player.setVolume(0.5);
         await player.resume();
       }, 500);
@@ -140,20 +133,25 @@ function Player({ accessToken, tracks, score, setScore }) {
       if (response.ok) {
         console.log("Playback started");
         player.addListener("player_state_changed", (state) => {
-          if (state && !state.paused && state.position === 0) {
+          if (
+            state &&
+            !state.paused &&
+            state.position === 0 &&
+            tracks[tracksPosition].duration_ms > 20000 + millisecondsPlayed
+          ) {
             setTimeout(() => {
               player
-                .seek(Number(tracks[tracksPosition].duration_ms / 2))
+                .seek(20000)
                 .then(() => {
-                  console.log("Seeked to halfway point");
+                  console.log("Seeked to 20 seconds");
                 })
                 .catch((err) => console.error("Error seeking:", err));
             }, 500);
-
-            setPlayerStarted(true);
-
-            player.removeListener("player_state_changed");
           }
+
+          setPlayerStarted(true);
+
+          player.removeListener("player_state_changed");
         });
       } else {
         console.error("Failed to start playback:", response.statusText);
@@ -171,17 +169,17 @@ function Player({ accessToken, tracks, score, setScore }) {
       const state = await player.getCurrentState();
       if (state) {
         const currentPosition = state.position; // Current playback position in ms
+        const stopPoint =
+          tracks[tracksPosition].duration_ms > 20000 + millisecondsPlayed
+            ? 20000 + millisecondsPlayed
+            : millisecondsPlayed;
 
-        if (
-          currentPosition >=
-            Number(tracks[tracksPosition].duration_ms / 2) + 10000 &&
-          !isCooldown
-        ) {
+        if (currentPosition >= stopPoint && !isCooldown) {
           clearInterval(positionCheckIntervalRef.current); // Stop the interval
           positionCheckIntervalRef.current = null; // Reset reference
           player.pause().then(() => {
             setPaused(true);
-            player.seek(Number(tracks[tracksPosition].duration_ms / 2));
+            player.seek(stopPoint - millisecondsPlayed);
           });
         }
       }

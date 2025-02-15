@@ -7,8 +7,7 @@ import shuffle from "../shuffle";
 import Score from "./Score";
 
 export default function Dashboard({ accessToken }) {
-  const [showLyrics, setShowLyrics] = useState(false);
-  const [showArt, setShowArt] = useState(false);
+  const [millisecondsPlayed, setmillisecondsPlayed] = useState(10000);
   const [tracks, setTracks] = useState([]);
   const [score, setScore] = useState(0);
   useEffect(() => {
@@ -54,6 +53,7 @@ export default function Dashboard({ accessToken }) {
           tracks={tracks}
           score={score}
           setScore={setScore}
+          millisecondsPlayed={millisecondsPlayed}
         />
       )}
       <Score scoreValue={score} />
