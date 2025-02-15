@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Dashboard from "./components/Dashboard";
+import LoginButton from "./components/LoginButton";
 import { getHashParams } from "./util/auth";
 import { Container } from "react-bootstrap";
 import { useState, useEffect, useRef } from "react";
@@ -76,24 +77,7 @@ function App() {
       {params ? (
         <Dashboard accessToken={params.access_token} />
       ) : (
-        <Container
-          className="d-flex justify-content-center align-items-center"
-          style={{ minHeight: "75vh" }}
-        >
-          <a
-            className="btn btn-dark"
-            style={{
-              "--bs-btn-padding-y": "1.5rem",
-              "--bs-btn-padding-x": "2.5rem",
-              "--bs-btn-font-size": "2rem",
-              backgroundColor: "rgba(0, 0, 0, 0.35)", // Semi-transparent black
-              color: "#fff",
-            }}
-            href="/.netlify/functions/login"
-          >
-            Login With Spotify
-          </a>
-        </Container>
+        <LoginButton />
       )}
       ;
     </div>

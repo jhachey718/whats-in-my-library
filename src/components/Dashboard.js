@@ -3,7 +3,6 @@ import Player from "./Player";
 import { fetchRandomTracks } from "../fetchAllTracks";
 import Score from "./Score";
 import RadioButton from "./RadioButton";
-import RadioButton from "./RadioButton";
 
 export default function Dashboard({ accessToken }) {
   const [millisecondsPlayed, setMillisecondsPlayed] = useState(5000);
@@ -21,10 +20,7 @@ export default function Dashboard({ accessToken }) {
     const fetchTracks = async () => {
       if (tracks.length > 0) return;
       try {
-        // const fetchedTracks = await fetchAllTracks(accessToken);
         const fetchedTracks = await fetchRandomTracks(accessToken);
-        console.log("Fetched tracks:", fetchedTracks);
-        // setTracks(shuffle(fetchedTracks));
         setTracks(fetchedTracks);
       } catch (error) {
         console.error("Error in Dashboard fetching tracks:", error.message);
