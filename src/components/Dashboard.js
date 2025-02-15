@@ -7,7 +7,6 @@ import RadioButton from "./RadioButton";
 
 export default function Dashboard({ accessToken }) {
   const [millisecondsPlayed, setMillisecondsPlayed] = useState(5000);
-  const [millisecondsPlayed, setMillisecondsPlayed] = useState(5000);
   const [tracks, setTracks] = useState([]);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState("2");
@@ -17,13 +16,7 @@ export default function Dashboard({ accessToken }) {
     setMillisecondsPlayed(milliseconds);
     console.log(milliseconds);
   };
-  const [selected, setSelected] = useState("2");
 
-  const radioButtonHandler = (id, milliseconds) => {
-    setSelected(id);
-    setMillisecondsPlayed(milliseconds);
-    console.log(milliseconds);
-  };
   useEffect(() => {
     const fetchTracks = async () => {
       if (tracks.length > 0) return;
