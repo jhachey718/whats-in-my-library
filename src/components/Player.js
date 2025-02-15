@@ -17,6 +17,10 @@ function Player({ accessToken, tracks, score, setScore, millisecondsPlayed }) {
   const [prevScore, setPrevScore] = useState(0);
 
   useEffect(() => {
+    setScore(0);
+  }, [millisecondsPlayed]);
+
+  useEffect(() => {
     let uris = [];
     for (let i = 0; i < tracks.length; i++) {
       uris.push(tracks[i].uri);

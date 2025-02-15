@@ -5,12 +5,19 @@ import { Container } from "react-bootstrap";
 import { fetchRandomTracks } from "../fetchAllTracks";
 import shuffle from "../shuffle";
 import Score from "./Score";
+import RadioButton from "./RadioButton";
 
 export default function Dashboard({ accessToken }) {
-  const [millisecondsPlayed, setMillisecondsPlayed] = useState(1000);
+  const [millisecondsPlayed, setMillisecondsPlayed] = useState(5000);
   const [tracks, setTracks] = useState([]);
   const [score, setScore] = useState(0);
-  const [selected, setSelected] = useState("option1");
+  const [selected, setSelected] = useState("2");
+
+  const radioButtonHandler = (id, milliseconds) => {
+    setSelected(id);
+    setMillisecondsPlayed(milliseconds);
+    console.log(milliseconds);
+  };
   useEffect(() => {
     const fetchTracks = async () => {
       if (tracks.length > 0) return;
@@ -30,57 +37,37 @@ export default function Dashboard({ accessToken }) {
   }, [accessToken]);
   return (
     <>
-      {tracks.length === 0 && (
-        <h2 className="text-white">Fetching Tracks...</h2>
-      )}
       <div
         className="btn-group btn-group-toggle d-inline-flex justify-content-center"
         data-toggle="buttons"
         style={{ marginTop: "1rem" }}
       >
-        <label
-          className={`btn btn-dark ${selected === "option1" ? "active" : ""}`}
-        >
-          <input
-            type="radio"
-            name="options"
-            id="option1"
-            autoComplete="off"
-            checked={selected === "option1"}
-            onChange={() => setSelected("option1")}
-            style={{ display: "none" }}
-          />
-          1s
-        </label>
-        <label
-          className={`btn btn-dark ${selected === "option2" ? "active" : ""}`}
-        >
-          <input
-            type="radio"
-            name="options"
-            id="option2"
-            autoComplete="off"
-            checked={selected === "option2"}
-            onChange={() => setSelected("option2")}
-            style={{ display: "none" }}
-          />
-          5s
-        </label>
-        <label
-          className={`btn btn-dark ${selected === "option3" ? "active" : ""}`}
-        >
-          <input
-            type="radio"
-            name="options"
-            id="option3"
-            autoComplete="off"
-            checked={selected === "option3"}
-            onChange={() => setSelected("option3")}
-            style={{ display: "none" }}
-          />
-          10s
-        </label>
+        <RadioButton
+          id="1"
+          label="1s"
+          value={1000}
+          selected={selected}
+          onChange={radioButtonHandler}
+        />
+        <RadioButton
+          id="2"
+          label="5s"
+          value={5000}
+          selected={selected}
+          onChange={radioButtonHandler}
+        />
+        <RadioButton
+          id="3"
+          label="10s"
+          value={10000}
+          selected={selected}
+          onChange={radioButtonHandler}
+        />
       </div>
+
+      {tracks.length === 0 && (
+        <h2 className="text-white">Fetching Tracks...</h2>
+      )}
 
       {tracks.length !== 0 && (
         <Player
