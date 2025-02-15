@@ -49,7 +49,12 @@ export default function Dashboard({ accessToken }) {
         /> */}
       </Container>
       {tracks.length !== 0 && (
-        <Player accessToken={accessToken} tracks={tracks} setScore={setScore} />
+        <Player
+          accessToken={accessToken}
+          tracks={tracks}
+          score={score}
+          setScore={setScore}
+        />
       )}
       <Score scoreValue={score} />
     </>

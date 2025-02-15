@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import GuessBox from "./GuessBox";
 import "./Player.css";
 
-function Player({ accessToken, tracks, setScore }) {
+function Player({ accessToken, tracks, score, setScore }) {
   const [player, setPlayer] = useState(undefined);
   const [deviceId, setDeviceId] = useState(null);
   const [isPaused, setPaused] = useState(true);
@@ -14,6 +14,7 @@ function Player({ accessToken, tracks, setScore }) {
   const [showArt, setShowArt] = useState(false);
   const [revealAnswers, setRevealAnswers] = useState(false);
   const positionCheckIntervalRef = useRef(null);
+  const [prevScore, setPrevScore] = useState(0);
 
   useEffect(() => {
     let uris = [];
@@ -73,7 +74,10 @@ function Player({ accessToken, tracks, setScore }) {
 
   const nextButtonHandler = async () => {
     if (isCooldown || !isPlayerStarted) return;
-
+    if (score == prevScore) {
+      setScore(0);
+    }
+    setPrevScore(score);
     setRevealAnswers(false);
     setCooldown(true);
     setTimeout(() => {
