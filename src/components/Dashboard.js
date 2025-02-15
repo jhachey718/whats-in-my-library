@@ -3,11 +3,20 @@ import Player from "./Player";
 import { fetchRandomTracks } from "../fetchAllTracks";
 import Score from "./Score";
 import RadioButton from "./RadioButton";
+import RadioButton from "./RadioButton";
 
 export default function Dashboard({ accessToken }) {
   const [millisecondsPlayed, setMillisecondsPlayed] = useState(5000);
+  const [millisecondsPlayed, setMillisecondsPlayed] = useState(5000);
   const [tracks, setTracks] = useState([]);
   const [score, setScore] = useState(0);
+  const [selected, setSelected] = useState("2");
+
+  const radioButtonHandler = (id, milliseconds) => {
+    setSelected(id);
+    setMillisecondsPlayed(milliseconds);
+    console.log(milliseconds);
+  };
   const [selected, setSelected] = useState("2");
 
   const radioButtonHandler = (id, milliseconds) => {
