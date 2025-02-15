@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
-import ToggleButton from "./ToggleButton";
 import Player from "./Player";
-import { Container } from "react-bootstrap";
 import { fetchRandomTracks } from "../fetchAllTracks";
-import shuffle from "../shuffle";
 import Score from "./Score";
 import RadioButton from "./RadioButton";
 
@@ -37,36 +34,40 @@ export default function Dashboard({ accessToken }) {
   }, [accessToken]);
   return (
     <>
-      <div
-        className="btn-group btn-group-toggle d-inline-flex justify-content-center"
-        data-toggle="buttons"
-        style={{ marginTop: "1rem" }}
-      >
-        <RadioButton
-          id="1"
-          label="1s"
-          value={1000}
-          selected={selected}
-          onChange={radioButtonHandler}
-        />
-        <RadioButton
-          id="2"
-          label="5s"
-          value={5000}
-          selected={selected}
-          onChange={radioButtonHandler}
-        />
-        <RadioButton
-          id="3"
-          label="10s"
-          value={10000}
-          selected={selected}
-          onChange={radioButtonHandler}
-        />
-      </div>
+      {tracks.length !== 0 && (
+        <div
+          className="btn-group btn-group-toggle d-inline-flex justify-content-center"
+          data-toggle="buttons"
+          style={{ marginTop: "1rem" }}
+        >
+          <RadioButton
+            id="1"
+            label="1s"
+            value={1000}
+            selected={selected}
+            onChange={radioButtonHandler}
+          />
+          <RadioButton
+            id="2"
+            label="5s"
+            value={5000}
+            selected={selected}
+            onChange={radioButtonHandler}
+          />
+          <RadioButton
+            id="3"
+            label="10s"
+            value={10000}
+            selected={selected}
+            onChange={radioButtonHandler}
+          />
+        </div>
+      )}
 
       {tracks.length === 0 && (
-        <h2 className="text-white">Fetching Tracks...</h2>
+        <h2 className="text-white position-absolute top-50 start-50 translate-middle">
+          Fetching Tracks...
+        </h2>
       )}
 
       {tracks.length !== 0 && (
@@ -78,7 +79,7 @@ export default function Dashboard({ accessToken }) {
           millisecondsPlayed={millisecondsPlayed}
         />
       )}
-      <Score scoreValue={score} />
+      {tracks.length !== 0 && <Score scoreValue={score} />}
     </>
   );
 }
