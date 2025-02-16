@@ -98,12 +98,18 @@ export async function fetchRandomTracks(accessToken) {
   }
   console.log(allPlaylistTracks);
 
-  // Combine liked tracks and playlist tracks
-  let allTracks = [...allPlaylistTracks, ...likedTracks];
+  const uniqueTracks = [];
+  const trackIds = new Set();
+  for (const track of allTracks) {
+    if (!trackIds.has(track.id)) {
+      trackIds.add(track.id);
+      uniqueTracks.push(track);
+    }
+  }
 
   // Shuffle the combined list of all tracks
-  allTracks = shuffleArray(allTracks);
+  const shuffledTracks = shuffleArray(uniqueTracks);
 
   // Return only the first 400 tracks
-  return allTracks.slice(0, 400);
+  return shuffledTracks.slice(0, 400);
 }
