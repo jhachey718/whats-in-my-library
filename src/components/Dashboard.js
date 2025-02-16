@@ -72,6 +72,7 @@ export default function Dashboard({ accessToken }) {
         <Player
           accessToken={accessToken}
           tracks={tracks}
+          setTracks={setTracks}
           score={score}
           setScore={setScore}
           millisecondsPlayed={millisecondsPlayed}

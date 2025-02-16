@@ -94,7 +94,7 @@ export async function fetchRandomTracks(accessToken) {
       100
     );
     allPlaylistTracks.push(...playlistTracks);
-    if (allPlaylistTracks.length >= 400) break;
+    if (allPlaylistTracks.length >= 700) break;
   }
   console.log(allPlaylistTracks);
 
@@ -104,6 +104,6 @@ export async function fetchRandomTracks(accessToken) {
   // Shuffle the combined list of all tracks
   allTracks = shuffleArray(allTracks);
 
-  // Return only the first 300 tracks
-  return allTracks.slice(0, 300);
+  // Return only the first 400 tracks
+  return allTracks.slice(0, 400);
 }
