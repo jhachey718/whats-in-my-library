@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import GuessBox from "./GuessBox";
 import "./Player.css";
-import { fetchRandomTracks } from "../fetchAllTracks";
+import { fetchRandomTracks } from "../util/fetchAllTracks";
 
 function Player({
   accessToken,

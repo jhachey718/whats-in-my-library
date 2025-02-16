@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Player from "./Player";
-import { fetchRandomTracks } from "../fetchAllTracks";
+import { fetchRandomTracks } from "../util/fetchAllTracks";
 import Score from "./Score";
 import RadioButton from "./RadioButton";
 

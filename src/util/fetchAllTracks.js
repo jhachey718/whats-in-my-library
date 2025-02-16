@@ -82,34 +82,36 @@ async function fetchPlaylistTracks(accessToken, playlistId, limit) {
 }
 
 export async function fetchRandomTracks(accessToken) {
-  let likedTracks = await fetchSavedTracks(accessToken, 100);
-  let playlists = await fetchUserPlaylists(accessToken, 100);
-  playlists = await shuffleArray(playlists);
-  let allPlaylistTracks = [];
-
-  for (const playlist of playlists) {
-    const playlistTracks = await fetchPlaylistTracks(
-      accessToken,
-      playlist.id,
-      100
-    );
-    allPlaylistTracks.push(...playlistTracks);
-    if (allPlaylistTracks.length >= 700) break;
-  }
-  console.log(allPlaylistTracks);
-
-  const uniqueTracks = [];
   const trackIds = new Set();
-  for (const track of allTracks) {
+  const uniqueTracks = [];
+
+  // Fetch liked tracks
+  const likedTracks = await fetchSavedTracks(accessToken, 100);
+  for (const track of likedTracks) {
     if (!trackIds.has(track.id)) {
       trackIds.add(track.id);
       uniqueTracks.push(track);
     }
   }
 
-  // Shuffle the combined list of all tracks
-  const shuffledTracks = shuffleArray(uniqueTracks);
+  // Fetch playlists and their tracks
+  const playlists = await fetchUserPlaylists(accessToken, 100);
+  for (const playlist of playlists) {
+    const playlistTracks = await fetchPlaylistTracks(
+      accessToken,
+      playlist.id,
+      100
+    );
+    for (const track of playlistTracks) {
+      if (!trackIds.has(track.id)) {
+        trackIds.add(track.id);
+        uniqueTracks.push(track);
+      }
+    }
+    if (uniqueTracks.length >= 700) break;
+  }
 
-  // Return only the first 400 tracks
+  // Shuffle and return the first 400 tracks
+  const shuffledTracks = shuffleArray(uniqueTracks);
   return shuffledTracks.slice(0, 400);
 }
