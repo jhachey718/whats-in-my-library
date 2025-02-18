@@ -25,6 +25,7 @@ function Player({
   const positionCheckIntervalRef = useRef(null);
   const [prevScore, setPrevScore] = useState(0);
   const [awaitingTracks, setAwaitingTracks] = useState(false);
+  const startTime = 20000; //in milliseconds
 
   useEffect(() => {
     setScore(0);
@@ -108,8 +109,8 @@ function Player({
       const newPosition = prev + 1;
       setAlbumArt(tracks[newPosition].album.images[1].url);
       setTimeout(async () => {
-        if (tracks[newPosition].duration_ms > 20000 + millisecondsPlayed) {
-          await player.seek(20000);
+        if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
+          await player.seek(startTime);
         }
         await player.setVolume(0.5);
         await player.resume();
@@ -118,8 +119,11 @@ function Player({
         setTimeout(async () => {
           setPaused(true);
           await player.pause();
-          if (tracks[newPosition].duration_ms > 20000 + millisecondsPlayed) {
-            await player.seek(20000);
+          if (
+            tracks[newPosition].duration_ms >
+            startTime + millisecondsPlayed
+          ) {
+            await player.seek(startTime);
           } else {
             await player.seek(0);
           }
@@ -173,11 +177,11 @@ function Player({
             state &&
             !state.paused &&
             state.position === 0 &&
-            tracks[tracksPosition].duration_ms > 20000 + millisecondsPlayed
+            tracks[tracksPosition].duration_ms > startTime + millisecondsPlayed
           ) {
             setTimeout(() => {
               player
-                .seek(20000)
+                .seek(startTime)
                 .then(() => {
                   console.log("Seeked to 20 seconds");
                 })
@@ -206,8 +210,8 @@ function Player({
       if (state) {
         const currentPosition = state.position; // Current playback position in ms
         const stopPoint =
-          tracks[tracksPosition].duration_ms > 20000 + millisecondsPlayed
-            ? 20000 + millisecondsPlayed
+          tracks[tracksPosition].duration_ms > startTime + millisecondsPlayed
+            ? startTime + millisecondsPlayed
             : millisecondsPlayed;
 
         if (currentPosition >= stopPoint && !isCooldown) {
