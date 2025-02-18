@@ -1,3 +1,5 @@
+import React from "react";
+import "./PlayButton.css";
 function PlayButton({ playButtonHandler, isPaused }) {
   return (
     <div className="d-flex justify-content-center">
