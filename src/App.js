@@ -6,7 +6,7 @@ import { Container } from "react-bootstrap";
 import { useState, useEffect, useRef } from "react";
 function App() {
   const [params, setParams] = useState();
-  const [isPremium, setIsPremium] = useState(false);
+  const [isPremium, setIsPremium] = useState(true);
   const hasRefreshed = useRef(false);
 
   // when the component mounts, check the URL for authentication

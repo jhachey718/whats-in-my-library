@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import GuessBox from "./GuessBox";
 import PlayButton from "./PlayButton";
 import NextButton from "./NextButton";
+import Loading from "./Loading";
 import { fetchRandomTracks } from "../util/fetchAllTracks";
 
 function Player({
@@ -53,7 +54,7 @@ function Player({
         getOAuthToken: async (cb) => cb(accessToken),
         volume: 0.5,
       });
-      setAlbumArt(tracks[tracksPosition].album.images[1].url);
+      setAlbumArt(tracks[0].album.images[1].url);
       setPlayer(player);
 
       player.addListener("ready", ({ device_id }) => {
@@ -63,11 +64,6 @@ function Player({
 
       player.connect();
     };
-    // return () => {
-    //   if (player) {
-    //     player.disconnect();
-    //   }
-    // };
   }, [tracks]);
 
   useEffect(() => {
@@ -86,14 +82,16 @@ function Player({
     setPrevScore(score);
     if (tracksPosition === tracks.length - 1) {
       await player.pause();
-      setPaused(true);
-      setTracksPosition(0);
-      setAwaitingTracks(true);
+      await setPaused(true);
+      await setTracksPosition(0);
+      await setRevealAnswers(false);
+      await setAwaitingTracks(true);
       console.log("Fetching new tracks...");
       const fetchedTracks = await fetchRandomTracks(accessToken);
-      setTracks(fetchedTracks);
-      setPlayerStarted(false);
-      setAwaitingTracks(false);
+      await setTracks(fetchedTracks);
+      await setPlayerStarted(false);
+      await setAlbumArt(fetchedTracks[0].album.images[1].url);
+      await setAwaitingTracks(false);
       return;
     }
     setRevealAnswers(false);
@@ -226,11 +224,7 @@ function Player({
     }, 500);
   }
   if (awaitingTracks) {
-    return (
-      <h2 className="text-white position-absolute top-50 start-50 translate-middle">
-        Fetching More Tracks...
-      </h2>
-    );
+    return <Loading text={"Finding more songs..."} />;
   } else {
     return (
       <div

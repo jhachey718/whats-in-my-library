@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Player from "./Player";
 import { fetchRandomTracks } from "../util/fetchAllTracks";
 import Score from "./Score";
+import Loading from "./Loading";
 import RadioButton from "./RadioButton";
 
 export default function Dashboard({ accessToken }) {
@@ -62,11 +63,7 @@ export default function Dashboard({ accessToken }) {
         </div>
       )}
 
-      {tracks.length === 0 && (
-        <h2 className="text-white position-absolute top-50 start-50 translate-middle">
-          Fetching Tracks...
-        </h2>
-      )}
+      {tracks.length === 0 && <Loading text={"Searching library..."} />}
 
       {tracks.length !== 0 && (
         <Player
