@@ -6,6 +6,7 @@ import { Container } from "react-bootstrap";
 import { useState, useEffect, useRef } from "react";
 function App() {
   const [params, setParams] = useState();
+  const [isPremium, setIsPremium] = useState(false);
   const hasRefreshed = useRef(false);
 
   // when the component mounts, check the URL for authentication
@@ -23,6 +24,31 @@ function App() {
       window.location.replace("/");
     }
   }, []);
+
+  const getUserInfo = async () => {
+    try {
+      const response = await fetch("https://api.spotify.com/v1/me", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${params.access_token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const productType = data.product; // Capturing the 'product' string
+
+      console.log("User Product Type:", productType);
+      productType === "premium" ? setIsPremium(true) : setIsPremium(false);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      return null;
+    }
+  };
 
   // get new parameters, using the current refresh token
   const refreshToken = () => {
@@ -50,6 +76,7 @@ function App() {
       }, 10000);
     }
     if (params) {
+      getUserInfo();
       const timer = setTimeout(() => {
         refreshToken();
       }, 55 * 60 * 1000); // 55 minutes in milliseconds
@@ -74,7 +101,15 @@ function App() {
       <h1 className="text-center text-white" style={{ marginTop: "3rem" }}>
         What's in my Library?
       </h1>
-      {params ? (
+      {params && !isPremium && (
+        <h2
+          className="text-white text-center position-absolute start-50 translate-middle"
+          style={{ top: "25%" }}
+        >
+          Sorry you need a Spotify Premium account :<span>&#40;</span>
+        </h2>
+      )}
+      {params && isPremium ? (
         <Dashboard accessToken={params.access_token} />
       ) : (
         <LoginButton />
