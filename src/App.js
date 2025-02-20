@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Dashboard from "./components/Dashboard";
 import LoginButton from "./components/LoginButton";
+import Rules from "./components/Rules";
 import { getHashParams } from "./util/auth";
 import { Container } from "react-bootstrap";
 import { useState, useEffect, useRef } from "react";
@@ -98,9 +99,15 @@ function App() {
         width: "100vw",
       }}
     >
-      <h1 className="text-center text-white" style={{ marginTop: "3rem" }}>
-        What's in my Library?
-      </h1>
+      <div
+        className="d-inline-flex gap-3 justify-content-center align-items-center"
+        style={{ marginTop: "3rem" }}
+      >
+        <Rules />
+        <h1 className="text-center text-white" style={{ marginTop: "1rem" }}>
+          What's in my Library?
+        </h1>
+      </div>
       {params && !isPremium && (
         <h2
           className="text-white text-center position-absolute start-50 translate-middle"
