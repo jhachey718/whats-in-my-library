@@ -78,7 +78,9 @@ export default function Dashboard({ accessToken }) {
           millisecondsPlayed={millisecondsPlayed}
         />
       )}
-      {tracks.length !== 0 && <Score scoreValue={score} />}
+      {tracks.length !== 0 && (
+        <Score scoreValue={score} millisecondsPlayed={millisecondsPlayed} />
+      )}
     </>
   );
 }
