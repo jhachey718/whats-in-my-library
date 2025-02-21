@@ -3,7 +3,6 @@ import Dashboard from "./components/Dashboard";
 import LoginButton from "./components/LoginButton";
 import Rules from "./components/Rules";
 import { getHashParams } from "./util/auth";
-import { Container } from "react-bootstrap";
 import { useState, useEffect, useRef } from "react";
 function App() {
   const [params, setParams] = useState();
@@ -82,6 +81,7 @@ function App() {
       // Cleanup the timer when the component unmounts or params change
       return () => clearTimeout(timer);
     }
+    // eslint-disable-next-line
   }, [params]);
 
   return (

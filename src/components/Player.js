@@ -30,7 +30,7 @@ function Player({
 
   useEffect(() => {
     setScore(0);
-  }, [millisecondsPlayed]);
+  }, [millisecondsPlayed, setScore]);
 
   useEffect(() => {
     let uris = [];
@@ -63,6 +63,7 @@ function Player({
 
       player.connect();
     };
+    // eslint-disable-next-line
   }, [tracks]);
 
   useEffect(() => {
@@ -71,6 +72,7 @@ function Player({
         cb(accessToken); // Update the token in the player
       };
     }
+    // eslint-disable-next-line
   }, [accessToken]);
 
   const nextButtonHandler = async () => {

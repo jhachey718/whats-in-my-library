@@ -31,6 +31,7 @@ export default function Dashboard({ accessToken }) {
     if (accessToken) {
       fetchTracks();
     }
+    // eslint-disable-next-line
   }, [accessToken]);
   return (
     <>
