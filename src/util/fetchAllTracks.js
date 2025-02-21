@@ -52,8 +52,9 @@ async function fetchUserPlaylists(accessToken, limit) {
   } catch (error) {
     console.error("Error fetching playlists:", error);
   }
+  const shufflePlaylists = await shuffleArray(playlists);
 
-  return playlists;
+  return shufflePlaylists;
 }
 
 async function fetchPlaylistTracks(accessToken, playlistId, limit) {
