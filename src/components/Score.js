@@ -18,6 +18,7 @@ function Score({ scoreValue, millisecondsPlayed }) {
       localStorage.setItem(`${millisecondsPlayed}highScore`, scoreValue);
       setHighScore(scoreValue);
     }
+    // eslint-disable-next-line
   }, [scoreValue, highScore]);
   return (
     <div

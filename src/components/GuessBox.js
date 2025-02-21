@@ -12,7 +12,7 @@ function GuessBox({ placeholder, answer, setShowArt, revealAnswer, setScore }) {
     if (setShowArt && revealAnswer) {
       setShowArt(true);
     }
-  }, [revealAnswer]);
+  }, [revealAnswer, setShowArt]);
   useEffect(() => {
     if (isCorrect && setShowArt) {
       setShowArt(true);
@@ -33,6 +33,7 @@ function GuessBox({ placeholder, answer, setShowArt, revealAnswer, setScore }) {
           break;
       }
     }
+    // eslint-disable-next-line
   }, [isCorrect]);
   useEffect(() => {
     if (placeholder === "Album" || placeholder === "Song") {
@@ -68,7 +69,7 @@ function GuessBox({ placeholder, answer, setShowArt, revealAnswer, setScore }) {
         ) >= 85
       );
     }
-  }, [guess, answer]);
+  }, [guess, answer, placeholder]);
   useEffect(() => {
     // Set point value based on the placeholder
     switch (placeholder) {
@@ -96,7 +97,7 @@ function GuessBox({ placeholder, answer, setShowArt, revealAnswer, setScore }) {
     } else {
       setAnswerString(answer);
     }
-  }, [answer]);
+  }, [answer, setShowArt]);
 
   return (
     <div className="d-flex gap-3 justify-content-center">
