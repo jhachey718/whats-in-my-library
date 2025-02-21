@@ -68,7 +68,7 @@ function GuessBox({ placeholder, answer, setShowArt, revealAnswer, setScore }) {
         ) >= 85
       );
     }
-  }, [guess, answer]); // Runs whenever `guess` or `answer` changes
+  }, [guess, answer]);
   useEffect(() => {
     // Set point value based on the placeholder
     switch (placeholder) {

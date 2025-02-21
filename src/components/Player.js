@@ -58,7 +58,6 @@ function Player({
       setPlayer(player);
 
       player.addListener("ready", ({ device_id }) => {
-        console.log("Player is ready with Device ID", device_id);
         setDeviceId(device_id);
       });
 
@@ -86,7 +85,6 @@ function Player({
       await setTracksPosition(0);
       await setRevealAnswers(false);
       await setAwaitingTracks(true);
-      console.log("Fetching new tracks...");
       const fetchedTracks = await fetchRandomTracks(accessToken);
       await setTracks(fetchedTracks);
       await setPlayerStarted(false);
@@ -133,15 +131,12 @@ function Player({
 
   const playButtonHandler = () => {
     if (!isPlayerStarted) {
-      console.log("Starting playback");
       playTrack();
       setPaused(false);
     } else if (isPaused) {
-      console.log("Resuming playback");
       player.togglePlay();
       setPaused(false);
     } else {
-      console.log("Pausing playback");
       player.togglePlay();
       setPaused(true);
     }
@@ -169,7 +164,6 @@ function Player({
       );
 
       if (response.ok) {
-        console.log("Playback started");
         player.addListener("player_state_changed", (state) => {
           if (
             state &&
@@ -180,9 +174,6 @@ function Player({
             setTimeout(() => {
               player
                 .seek(startTime)
-                .then(() => {
-                  console.log("Seeked to 20 seconds");
-                })
                 .catch((err) => console.error("Error seeking:", err));
             }, 500);
           }

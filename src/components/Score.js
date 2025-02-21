@@ -3,7 +3,6 @@ function Score({ scoreValue, millisecondsPlayed }) {
   const [highScore, setHighScore] = useState(0);
 
   useEffect(() => {
-    // Load high score from localStorage
     setHighScore(0);
     const storedHighScore = localStorage.getItem(
       `${millisecondsPlayed}highScore`

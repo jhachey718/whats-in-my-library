@@ -14,7 +14,6 @@ function App() {
   // data, if it is present, update the parameters state
   useEffect(() => {
     const authData = getHashParams(window.location);
-    console.log("Auth Data:", authData);
     if (authData) {
       if (authData.path === "error") {
         alert("There was an error during the authentication.");
@@ -43,7 +42,6 @@ function App() {
       const data = await response.json();
       const productType = data.product; // Capturing the 'product' string
 
-      console.log("User Product Type:", productType);
       productType === "premium" ? setIsPremium(true) : setIsPremium(false);
     } catch (error) {
       console.error("Error fetching user info:", error);
@@ -53,7 +51,6 @@ function App() {
 
   // get new parameters, using the current refresh token
   const refreshToken = () => {
-    console.log("Refreshing...");
     return fetch(
       `/.netlify/functions/refresh_token?refresh_token=${params.refresh_token}`
     )
@@ -64,7 +61,7 @@ function App() {
         setParams(jsonResponse);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 

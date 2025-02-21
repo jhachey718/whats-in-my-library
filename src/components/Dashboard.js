@@ -14,7 +14,6 @@ export default function Dashboard({ accessToken }) {
   const radioButtonHandler = (id, milliseconds) => {
     setSelected(id);
     setMillisecondsPlayed(milliseconds);
-    console.log(milliseconds);
   };
 
   useEffect(() => {
