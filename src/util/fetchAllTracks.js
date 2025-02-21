@@ -84,7 +84,7 @@ async function fetchPlaylistTracks(accessToken, playlistId, limit) {
 
 export async function fetchRandomTracks(accessToken) {
   const tracksItem = await localStorage.getItem("tracks");
-  if (tracksItem) {
+  if (!tracksItem) {
     const tracks = JSON.parse(tracksItem);
     const isExpired = new Date().getTime() > tracks.expDate;
     if (!isExpired) {
@@ -106,8 +106,9 @@ export async function fetchRandomTracks(accessToken) {
   }
 
   // Fetch playlists and their tracks
-  const playlists = await fetchUserPlaylists(accessToken, 100);
+  const playlists = await fetchUserPlaylists(accessToken, 10);
   for (const playlist of playlists) {
+    console.log(playlist.id);
     const playlistTracks = await fetchPlaylistTracks(
       accessToken,
       playlist.id,
