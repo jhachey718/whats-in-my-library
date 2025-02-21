@@ -96,10 +96,7 @@ function App() {
         width: "100vw",
       }}
     >
-      <div
-        // className="d-inline-flex gap-3 justify-content-center align-items-center"
-        style={{ marginTop: "0.5rem", position: "relative" }}
-      >
+      <div style={{ marginTop: "0.5rem", position: "relative" }}>
         <Rules />
         <h1 className="text-center text-white">What's in my Library?</h1>
       </div>
