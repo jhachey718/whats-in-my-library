@@ -229,6 +229,9 @@ function Player({
               alt="Album Art"
               width="250"
               height="250"
+              style={{
+                borderRadius: "10px",
+              }}
             />
           </div>
         )}
