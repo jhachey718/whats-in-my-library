@@ -100,13 +100,11 @@ function App() {
       }}
     >
       <div
-        className="d-inline-flex gap-3 justify-content-center align-items-center"
-        style={{ marginTop: "3rem" }}
+        // className="d-inline-flex gap-3 justify-content-center align-items-center"
+        style={{ marginTop: "0.5rem", position: "relative" }}
       >
         <Rules />
-        <h1 className="text-center text-white" style={{ marginTop: "1rem" }}>
-          What's in my Library?
-        </h1>
+        <h1 className="text-center text-white">What's in my Library?</h1>
       </div>
       {params && !isPremium && (
         <h2
