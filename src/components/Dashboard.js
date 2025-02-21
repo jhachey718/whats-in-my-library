@@ -10,6 +10,7 @@ export default function Dashboard({ accessToken }) {
   const [tracks, setTracks] = useState([]);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState("2");
+  const [tracksFetched, setTracksFetched] = useState(false);
 
   const radioButtonHandler = (id, milliseconds) => {
     setSelected(id);
@@ -18,8 +19,9 @@ export default function Dashboard({ accessToken }) {
 
   useEffect(() => {
     const fetchTracks = async () => {
-      if (tracks.length > 0) return;
+      if (tracksFetched) return;
       try {
+        setTracksFetched(true);
         const fetchedTracks = await fetchRandomTracks(accessToken);
         setTracks(fetchedTracks);
       } catch (error) {
