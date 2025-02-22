@@ -125,7 +125,7 @@ function Player({
       await player.setVolume(0.5);
       await player.resume();
       setPaused(false);
-    }, 1500);
+    }, 3000);
 
     // Disable cooldown after 3 seconds
     setTimeout(() => {
