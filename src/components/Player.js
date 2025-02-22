@@ -131,25 +131,21 @@ function Player({
     });
   };
 
-  const playButtonHandler = () => {
-    if (!isPlayerStarted) {
-      playTrack();
+  const playButtonHandler = async () => {
+    if (!isPlayerStarted && deviceId) {
+      await playTrack();
+      player.resume();
       setPaused(false);
     } else if (isPaused) {
       player.togglePlay();
       setPaused(false);
-    } else {
+    } else if (isPlayerStarted) {
       player.togglePlay();
       setPaused(true);
     }
   };
 
   const playTrack = async () => {
-    if (!deviceId) {
-      console.error("Device ID is not set.");
-      return;
-    }
-
     try {
       const response = await fetch(
         `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
@@ -181,8 +177,6 @@ function Player({
           }
 
           setPlayerStarted(true);
-
-          player.removeListener("player_state_changed");
         });
       } else {
         console.error("Failed to start playback:", response.statusText);
@@ -229,8 +223,8 @@ function Player({
             <img
               src={showArt ? albumArt : "/default-cover-art.png"}
               alt="Album Art"
-              width="250"
-              height="250"
+              width="220"
+              height="220"
               style={{
                 borderRadius: "10px",
               }}

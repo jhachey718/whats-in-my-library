@@ -91,9 +91,10 @@ function App() {
         backgroundImage: "url('/background.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        minHeight: "100vh",
+        minHeight: "100dvh",
         height: "auto",
         width: "100vw",
+        paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
       <div style={{ marginTop: "0.5rem", position: "relative" }}>
@@ -113,7 +114,6 @@ function App() {
       ) : (
         <LoginButton />
       )}
-      ;
     </div>
   );
 }
