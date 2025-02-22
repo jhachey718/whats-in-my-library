@@ -111,9 +111,7 @@ function Player({
     setRevealAnswers(false);
     setCooldown(true);
     player.setVolume(0.0);
-    setTimeout(() => {
-      player.nextTrack();
-    }, 1000);
+    player.nextTrack();
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
     setAlbumArt(tracks[newPosition].album.images[1].url);
