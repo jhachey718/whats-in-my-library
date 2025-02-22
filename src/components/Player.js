@@ -181,6 +181,7 @@ function Player({
           }
 
           setPlayerStarted(true);
+          player.resume();
 
           player.removeListener("player_state_changed");
         });
