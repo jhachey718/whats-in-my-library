@@ -131,9 +131,10 @@ function Player({
     });
   };
 
-  const playButtonHandler = () => {
+  const playButtonHandler = async () => {
     if (!isPlayerStarted) {
-      playTrack();
+      await playTrack();
+      player.resume();
       setPaused(false);
     } else if (isPaused) {
       player.togglePlay();
@@ -181,9 +182,6 @@ function Player({
           }
 
           setPlayerStarted(true);
-          setTimeout(() => {
-            player.resume();
-          }, 2000);
 
           player.removeListener("player_state_changed");
         });
