@@ -119,6 +119,7 @@ function Player({
     setAlbumArt(tracks[newPosition].album.images[1].url);
 
     setTimeout(async () => {
+      await player.setVolume(0.0);
       await player.pause();
     }, 500);
 
