@@ -35,8 +35,13 @@ function Player({
       setPrevScore(parseInt(scoreItem, 10));
     } else {
       setScore(0);
+      setPrevScore(0);
     }
   }, [millisecondsPlayed, setScore]);
+
+  useEffect(() => {
+    localStorage.setItem(`${millisecondsPlayed}score`, score);
+  }, [score]);
 
   useEffect(() => {
     let uris = [];
@@ -109,8 +114,6 @@ function Player({
     if (score === prevScore) {
       setScore(0);
       localStorage.setItem(`${millisecondsPlayed}score`, 0);
-    } else {
-      localStorage.setItem(`${millisecondsPlayed}score`, score);
     }
     setPrevScore(score);
   };
