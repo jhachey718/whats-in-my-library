@@ -111,8 +111,9 @@ function Player({
     setRevealAnswers(false);
     setCooldown(true);
     await player.setVolume(0.0);
-    await player.nextTrack();
-
+    setTimeout(async () => {
+      await player.nextTrack();
+    }, 500);
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
     setAlbumArt(tracks[newPosition].album.images[1].url);
@@ -122,12 +123,12 @@ function Player({
         await player.seek(startTime);
       }
       await player.setVolume(0.5);
-      await player.resume();
       setPaused(false);
-    }, 1500);
+    }, 1900);
 
     // Disable cooldown after 3 seconds
     setTimeout(() => {
+      player.resume();
       setCooldown(false);
     }, 3000);
   };
