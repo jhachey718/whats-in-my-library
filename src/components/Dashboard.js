@@ -12,6 +12,10 @@ export default function Dashboard({ accessToken }) {
   const [selected, setSelected] = useState("2");
   const [tracksFetched, setTracksFetched] = useState(false);
 
+  useEffect(() => {
+    console.log("Score updated:", score);
+  }, [score]);
+
   const radioButtonHandler = (id, milliseconds) => {
     setSelected(id);
     setMillisecondsPlayed(milliseconds);

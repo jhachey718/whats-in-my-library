@@ -29,7 +29,15 @@ function Player({
   const startTime = 20000; //in milliseconds
 
   useEffect(() => {
-    setScore(0);
+    const scoreItem = localStorage.getItem(`${millisecondsPlayed}score`);
+    console.log(scoreItem);
+    if (scoreItem) {
+      console.log("Retrieving score");
+      setScore(parseInt(scoreItem, 10));
+      setPrevScore(parseInt(scoreItem, 10));
+    } else {
+      setScore(0);
+    }
   }, [millisecondsPlayed, setScore]);
 
   useEffect(() => {
@@ -81,6 +89,10 @@ function Player({
     // Reset score if it hasn't changed
     if (score === prevScore) {
       setScore(0);
+      localStorage.setItem(`${millisecondsPlayed}score`, 0);
+    } else {
+      console.log("Setting Score");
+      localStorage.setItem(`${millisecondsPlayed}score`, score);
     }
     setPrevScore(score);
 

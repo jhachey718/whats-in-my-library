@@ -23,11 +23,19 @@ function Rules() {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h3>Objective</h3>
-          <p>
-            Guess the <strong>song title, artist, and album</strong> from short
-            audio clips of songs in your Spotify library.
-          </p>
+          <h3>How to Play</h3>
+          <ol>
+            <li>Listen to a randomly selected song clip.</li>
+            <li>
+              Guess the <strong>title, artist, and album</strong> to score
+              points.
+            </li>
+            <li>
+              Click <strong>Reveal Answers</strong> if needed (no penalty if you
+              guessed at least one part).
+            </li>
+            <li>Keep going and see how many you can get right!</li>
+          </ol>
 
           <h3>Game Modes</h3>
           <ul>
@@ -43,24 +51,11 @@ function Rules() {
           </ul>
           <p>Each mode has its own score and high score.</p>
 
-          <h3>How to Play</h3>
-          <ol>
-            <li>Listen to a randomly selected song clip.</li>
-            <li>
-              Guess the <strong>title, artist, and album</strong> to score
-              points.
-            </li>
-            <li>
-              Click <strong>Reveal Answers</strong> if needed (no penalty if you
-              guessed at least one part).
-            </li>
-            <li>Keep going and see how many you can get right!</li>
-          </ol>
-
           <h3>Scoring</h3>
           <ul>
             <li>
-              ✅ <strong>Correct Guess</strong> → Keep your score.
+              ✅ <strong>Correct Guess</strong> → Keep your score. Score is kept
+              even after refreshing the page!
             </li>
             <li>
               ❌ <strong>Miss Everything</strong> → Score resets to 0.
@@ -69,6 +64,10 @@ function Rules() {
 
           <h3>Challenge Yourself</h3>
           <p>How well do you know your music?</p>
+
+          <h4>
+            Sorry for any bugs. A refresh of the page should fix most of them.
+          </h4>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
