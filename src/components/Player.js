@@ -113,7 +113,7 @@ function Player({
     player.setVolume(0.0);
     setTimeout(() => {
       player.nextTrack();
-    }, 500);
+    }, 1000);
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
     setAlbumArt(tracks[newPosition].album.images[1].url);
