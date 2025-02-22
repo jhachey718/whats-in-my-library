@@ -113,7 +113,7 @@ function Player({
     await player.setVolume(0.0).then(() => {
       player.nextTrack();
     });
-    await player.pause();
+    // await player.pause();
 
     // setTimeout(async () => {
     //   await player.pause();
@@ -200,30 +200,51 @@ function Player({
     }
   };
 
-  if (isPlayerStarted) {
-    if (positionCheckIntervalRef.current) {
-      clearInterval(positionCheckIntervalRef.current);
-    }
-    positionCheckIntervalRef.current = setInterval(async () => {
-      const state = await player.getCurrentState();
-      if (state) {
-        const currentPosition = state.position; // Current playback position in ms
-        const stopPoint =
-          tracks[tracksPosition].duration_ms > startTime + millisecondsPlayed
-            ? startTime + millisecondsPlayed
-            : millisecondsPlayed;
-
-        if (currentPosition >= stopPoint && !isCooldown) {
-          clearInterval(positionCheckIntervalRef.current); // Stop the interval
-          positionCheckIntervalRef.current = null; // Reset reference
-          player.pause().then(() => {
-            setPaused(true);
-            player.seek(stopPoint - millisecondsPlayed);
-          });
-        }
+  useEffect(() => {
+    if (isPlayerStarted) {
+      // Clear the existing interval if it's running
+      if (positionCheckIntervalRef.current) {
+        clearInterval(positionCheckIntervalRef.current);
+        positionCheckIntervalRef.current = null;
       }
-    }, 100);
-  }
+
+      positionCheckIntervalRef.current = setInterval(async () => {
+        const state = await player.getCurrentState();
+        if (state) {
+          const currentPosition = state.position; // Current playback position in ms
+          const stopPoint =
+            tracks[tracksPosition].duration_ms > startTime + millisecondsPlayed
+              ? startTime + millisecondsPlayed
+              : millisecondsPlayed;
+
+          if (currentPosition >= stopPoint && !isCooldown) {
+            clearInterval(positionCheckIntervalRef.current);
+            positionCheckIntervalRef.current = null;
+
+            await player.pause();
+            setPaused(true);
+            await player.seek(stopPoint - millisecondsPlayed);
+          }
+        }
+      }, 100);
+    }
+
+    return () => {
+      if (positionCheckIntervalRef.current) {
+        clearInterval(positionCheckIntervalRef.current);
+        positionCheckIntervalRef.current = null;
+      }
+    };
+  }, [
+    isPlayerStarted,
+    tracksPosition,
+    isCooldown,
+    player,
+    tracks,
+    startTime,
+    millisecondsPlayed,
+    isPaused,
+  ]);
   if (awaitingTracks) {
     return <Loading text={"Finding more songs..."} />;
   } else {
