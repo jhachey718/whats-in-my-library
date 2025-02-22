@@ -177,8 +177,6 @@ function Player({
           }
 
           setPlayerStarted(true);
-
-          player.removeListener("player_state_changed");
         });
       } else {
         console.error("Failed to start playback:", response.statusText);
