@@ -81,7 +81,7 @@ function Player({
     // eslint-disable-next-line
   }, [accessToken]);
 
-  const nextButtonHandler = () => {
+  const nextButtonHandler = async () => {
     if (isCooldown || !isPlayerStarted) return;
 
     // Reset score if it hasn't changed
@@ -94,13 +94,13 @@ function Player({
     setPrevScore(score);
 
     if (tracksPosition === tracks.length - 1) {
-      player.pause();
+      await player.pause();
       setPaused(true);
       setTracksPosition(0);
       setRevealAnswers(false);
       setAwaitingTracks(true);
 
-      const fetchedTracks = fetchRandomTracks(accessToken);
+      const fetchedTracks = await fetchRandomTracks(accessToken);
       setTracks(fetchedTracks);
       setPlayerStarted(false);
       setAlbumArt(fetchedTracks[0].album.images[1].url);
@@ -110,23 +110,25 @@ function Player({
 
     setRevealAnswers(false);
     setCooldown(true);
-    player.setVolume(0.0);
-    player.nextTrack();
+    await player.pause();
+    await player.setVolume(0.0);
+    await player.nextTrack();
+
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
     setAlbumArt(tracks[newPosition].album.images[1].url);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
-        player.seek(startTime);
+        await player.seek(startTime);
       }
-      player.setVolume(0.5);
+      await player.setVolume(0.5);
+      await player.resume();
       setPaused(false);
-    }, 1900);
+    }, 1500);
 
     // Disable cooldown after 3 seconds
     setTimeout(() => {
-      player.resume();
       setCooldown(false);
     }, 3000);
   };
