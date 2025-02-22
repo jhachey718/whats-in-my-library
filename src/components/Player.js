@@ -122,8 +122,10 @@ function Player({
       if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
         await player.seek(startTime);
       }
-      await player.setVolume(0.5);
-      await player.resume();
+      setTimeout(async () => {
+        await player.setVolume(0.5);
+        await player.resume();
+      }, 500);
       setPaused(false);
     }, 1500);
 
