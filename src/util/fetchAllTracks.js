@@ -120,14 +120,14 @@ export async function fetchRandomTracks(accessToken) {
     }
     if (uniqueTracks.length >= 1000) break;
   }
-  const date = new Date().setDate(new Date().getDate() + 1);
-  localStorage.setItem(
-    "tracks",
-    JSON.stringify({
-      list: uniqueTracks,
-      expDate: date,
-    })
-  );
+  // const date = new Date().setDate(new Date().getDate() + 1);
+  // localStorage.setItem(
+  //   "tracks",
+  //   JSON.stringify({
+  //     list: uniqueTracks,
+  //     expDate: date,
+  //   })
+  // );
 
   // Shuffle and return the first 400 tracks
   const shuffledTracks = shuffleArray(uniqueTracks);
