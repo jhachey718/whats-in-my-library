@@ -110,9 +110,14 @@ function Player({
 
     setRevealAnswers(false);
     setCooldown(true);
-    await player.pause();
-    await player.setVolume(0.0);
-    await player.nextTrack();
+    await player.setVolume(0.0).then(() => {
+      player.nextTrack();
+    });
+    // await player.pause();
+
+    // setTimeout(async () => {
+    //   await player.pause();
+    // }, 300);
 
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
@@ -120,14 +125,18 @@ function Player({
 
     setTimeout(async () => {
       if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
-        await player.seek(startTime);
+        await player.pause().then(() => {
+          player.seek(startTime);
+        });
       }
-      setTimeout(async () => {
-        await player.setVolume(0.5);
-        await player.resume();
-      }, 500);
+
       setPaused(false);
-    }, 1500);
+    }, 1200);
+    setTimeout(async () => {
+      await player.setVolume(0.5).then(() => {
+        player.resume();
+      });
+    }, 1700);
 
     // Disable cooldown after 3 seconds
     setTimeout(() => {
