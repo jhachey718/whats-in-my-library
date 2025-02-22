@@ -183,7 +183,7 @@ function Player({
           setPlayerStarted(true);
           setTimeout(() => {
             player.resume();
-          }, 500);
+          }, 2000);
 
           player.removeListener("player_state_changed");
         });
@@ -232,8 +232,8 @@ function Player({
             <img
               src={showArt ? albumArt : "/default-cover-art.png"}
               alt="Album Art"
-              width="200"
-              height="200"
+              width="220"
+              height="220"
               style={{
                 borderRadius: "10px",
               }}
