@@ -81,7 +81,7 @@ function Player({
     // eslint-disable-next-line
   }, [accessToken]);
 
-  const nextButtonHandler = async () => {
+  const nextButtonHandler = () => {
     if (isCooldown || !isPlayerStarted) return;
 
     // Reset score if it hasn't changed
@@ -94,13 +94,13 @@ function Player({
     setPrevScore(score);
 
     if (tracksPosition === tracks.length - 1) {
-      await player.pause();
+      player.pause();
       setPaused(true);
       setTracksPosition(0);
       setRevealAnswers(false);
       setAwaitingTracks(true);
 
-      const fetchedTracks = await fetchRandomTracks(accessToken);
+      const fetchedTracks = fetchRandomTracks(accessToken);
       setTracks(fetchedTracks);
       setPlayerStarted(false);
       setAlbumArt(fetchedTracks[0].album.images[1].url);
@@ -110,19 +110,19 @@ function Player({
 
     setRevealAnswers(false);
     setCooldown(true);
-    await player.setVolume(0.0);
-    setTimeout(async () => {
-      await player.nextTrack();
+    player.setVolume(0.0);
+    setTimeout(() => {
+      player.nextTrack();
     }, 500);
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
     setAlbumArt(tracks[newPosition].album.images[1].url);
 
-    setTimeout(async () => {
+    setTimeout(() => {
       if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
-        await player.seek(startTime);
+        player.seek(startTime);
       }
-      await player.setVolume(0.5);
+      player.setVolume(0.5);
       setPaused(false);
     }, 1900);
 
