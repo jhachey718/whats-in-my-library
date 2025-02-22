@@ -129,11 +129,14 @@ function Player({
           player.seek(startTime);
         });
       }
+
+      setPaused(false);
+    }, 1200);
+    setTimeout(async () => {
       await player.setVolume(0.5).then(() => {
         player.resume();
       });
-      setPaused(false);
-    }, 1200);
+    }, 1700);
 
     // Disable cooldown after 3 seconds
     setTimeout(() => {
