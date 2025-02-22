@@ -77,58 +77,59 @@ function Player({
 
   const nextButtonHandler = async () => {
     if (isCooldown || !isPlayerStarted) return;
+
+    // Reset score if it hasn't changed
     if (score === prevScore) {
       setScore(0);
     }
     setPrevScore(score);
+
+    // Handle end of track list
     if (tracksPosition === tracks.length - 1) {
       await player.pause();
-      await setPaused(true);
-      await setTracksPosition(0);
-      await setRevealAnswers(false);
-      await setAwaitingTracks(true);
+      setPaused(true);
+      setTracksPosition(0);
+      setRevealAnswers(false);
+      setAwaitingTracks(true);
+
       const fetchedTracks = await fetchRandomTracks(accessToken);
-      await setTracks(fetchedTracks);
-      await setPlayerStarted(false);
-      await setAlbumArt(fetchedTracks[0].album.images[1].url);
-      await setAwaitingTracks(false);
+      setTracks(fetchedTracks);
+      setPlayerStarted(false);
+      setAlbumArt(fetchedTracks[0].album.images[1].url);
+      setAwaitingTracks(false);
       return;
     }
+
+    // Prepare for the next track
     setRevealAnswers(false);
     setCooldown(true);
+
+    // Pause the player and set volume to 0
+    await player.pause();
+    await player.setVolume(0.0);
+
+    // Move to the next track
+    await player.nextTrack();
+
+    // Update the track position and album art
+    const newPosition = tracksPosition + 1;
+    setTracksPosition(newPosition);
+    setAlbumArt(tracks[newPosition].album.images[1].url);
+
+    // Wait for the player to be ready, then seek to the start time and resume playback
+    setTimeout(async () => {
+      if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
+        await player.seek(startTime);
+      }
+      await player.setVolume(0.5);
+      await player.resume();
+      setPaused(false);
+    }, 1500); // Adjust this delay if needed
+
+    // Disable cooldown after 3 seconds
     setTimeout(() => {
       setCooldown(false);
     }, 3000);
-    await player.pause();
-    await player.setVolume(0.0);
-    await player.nextTrack();
-    setPaused(false);
-    setTracksPosition((prev) => {
-      const newPosition = prev + 1;
-      setAlbumArt(tracks[newPosition].album.images[1].url);
-      setTimeout(async () => {
-        if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
-          await player.seek(startTime);
-        }
-        await player.setVolume(0.5);
-        await player.resume();
-      }, 500);
-      if (millisecondsPlayed === 1000) {
-        setTimeout(async () => {
-          setPaused(true);
-          await player.pause();
-          if (
-            tracks[newPosition].duration_ms >
-            startTime + millisecondsPlayed
-          ) {
-            await player.seek(startTime);
-          } else {
-            await player.seek(0);
-          }
-        }, millisecondsPlayed + 900);
-      }
-      return newPosition;
-    });
   };
 
   const playButtonHandler = async () => {
