@@ -110,13 +110,14 @@ function Player({
 
     setRevealAnswers(false);
     setCooldown(true);
-    await player.setVolume(0.0);
+    await player.setVolume(0.0).then(() => {
+      player.nextTrack();
+    });
     await player.pause();
-    await player.nextTrack();
 
-    setTimeout(async () => {
-      await player.pause();
-    }, 300);
+    // setTimeout(async () => {
+    //   await player.pause();
+    // }, 300);
 
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
@@ -124,7 +125,9 @@ function Player({
 
     setTimeout(async () => {
       if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
-        await player.seek(startTime);
+        await player.pause().then(() => {
+          player.seek(startTime);
+        });
       }
       await player.setVolume(0.5);
       await player.resume();

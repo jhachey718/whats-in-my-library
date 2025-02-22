@@ -44,7 +44,7 @@ export default function Dashboard({ accessToken }) {
           <RadioButton
             id="1"
             label="1s"
-            value={1000}
+            value={1400}
             selected={selected}
             onChange={radioButtonHandler}
           />
