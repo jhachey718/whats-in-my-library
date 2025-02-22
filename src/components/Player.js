@@ -84,7 +84,6 @@ function Player({
     }
     setPrevScore(score);
 
-    // Handle end of track list
     if (tracksPosition === tracks.length - 1) {
       await player.pause();
       setPaused(true);
@@ -100,23 +99,16 @@ function Player({
       return;
     }
 
-    // Prepare for the next track
     setRevealAnswers(false);
     setCooldown(true);
-
-    // Pause the player and set volume to 0
     await player.pause();
     await player.setVolume(0.0);
-
-    // Move to the next track
     await player.nextTrack();
 
-    // Update the track position and album art
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
     setAlbumArt(tracks[newPosition].album.images[1].url);
 
-    // Wait for the player to be ready, then seek to the start time and resume playback
     setTimeout(async () => {
       if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
         await player.seek(startTime);
@@ -124,7 +116,7 @@ function Player({
       await player.setVolume(0.5);
       await player.resume();
       setPaused(false);
-    }, 1500); // Adjust this delay if needed
+    }, 1500);
 
     // Disable cooldown after 3 seconds
     setTimeout(() => {
@@ -210,7 +202,7 @@ function Player({
           });
         }
       }
-    }, 500);
+    }, 100);
   }
   if (awaitingTracks) {
     return <Loading text={"Finding more songs..."} />;
