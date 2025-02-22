@@ -89,8 +89,7 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
     if (tracksItem) {
       const tracks = JSON.parse(LZString.decompress(tracksItem));
       const tracksPosition = await localStorage.getItem("tracksPosition");
-      const isContinuing = await localStorage.getItem("continue");
-      if (tracksPosition && isContinuing === "true") {
+      if (tracksPosition) {
         const position = parseInt(tracksPosition, 10);
         return tracks.list.slice(position, position + 400);
       } else {
@@ -148,6 +147,5 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
     )
   );
   localStorage.setItem("tracksPosition", 0);
-  localStorage.setItem("continue", "false");
   return shuffledTracks.slice(0, 400);
 }

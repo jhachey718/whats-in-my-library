@@ -109,10 +109,8 @@ function Player({
     if (score === prevScore) {
       setScore(0);
       localStorage.setItem(`${millisecondsPlayed}score`, 0);
-      localStorage.setItem("continue", "false");
     } else {
       localStorage.setItem(`${millisecondsPlayed}score`, score);
-      localStorage.setItem("continue", "true");
     }
     setPrevScore(score);
   };
@@ -162,8 +160,7 @@ function Player({
   const playButtonHandler = async () => {
     if (!isPlayerStarted && deviceId) {
       await playTrack();
-      player.resume();
-      await player.activateElement();
+      // player.resume();
       setPaused(false);
     } else if (isPaused) {
       player.togglePlay();
@@ -206,6 +203,7 @@ function Player({
           }
 
           setPlayerStarted(true);
+          player.activateElement();
         });
       } else {
         console.error("Failed to start playback:", response.statusText);
