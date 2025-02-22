@@ -160,7 +160,7 @@ function Player({
   const playButtonHandler = async () => {
     if (!isPlayerStarted && deviceId) {
       await playTrack();
-      // player.resume();
+      await player.activateElement();
       setPaused(false);
     } else if (isPaused) {
       player.togglePlay();
@@ -203,7 +203,6 @@ function Player({
           }
 
           setPlayerStarted(true);
-          player.activateElement();
         });
       } else {
         console.error("Failed to start playback:", response.statusText);
