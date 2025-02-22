@@ -40,10 +40,6 @@ function Player({
   }, [millisecondsPlayed, setScore]);
 
   useEffect(() => {
-    localStorage.setItem(`${millisecondsPlayed}score`, score);
-  }, [score]);
-
-  useEffect(() => {
     let uris = [];
     for (let i = 0; i < tracks.length; i++) {
       uris.push(tracks[i].uri);
@@ -113,7 +109,11 @@ function Player({
     }
     if (score === prevScore) {
       setScore(0);
-      localStorage.setItem(`${millisecondsPlayed}score`, 0);
+      localStorage.setItem("1400score", 0);
+      localStorage.setItem("5000score", 0);
+      localStorage.setItem("10000score", 0);
+    } else {
+      localStorage.setItem(`${millisecondsPlayed}score`, score);
     }
     setPrevScore(score);
   };
