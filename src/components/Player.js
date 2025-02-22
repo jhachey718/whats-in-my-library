@@ -110,18 +110,17 @@ function Player({
 
     setRevealAnswers(false);
     setCooldown(true);
-    await player.pause();
     await player.setVolume(0.0);
+    await player.pause();
     await player.nextTrack();
+
+    setTimeout(async () => {
+      await player.pause();
+    }, 300);
 
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
     setAlbumArt(tracks[newPosition].album.images[1].url);
-
-    setTimeout(async () => {
-      await player.setVolume(0.0);
-      await player.pause();
-    }, 500);
 
     setTimeout(async () => {
       if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
