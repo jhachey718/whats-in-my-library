@@ -58,8 +58,8 @@ function Rules() {
           <h3>Scoring</h3>
           <ul>
             <li>
-              ✅ <strong>Correct Guess</strong> → Keep your score. Score is kept
-              even after refreshing the page!
+              ✅ <strong>Correct Guess</strong> → Keep your score. Progress is
+              kept even after refreshing the page!
             </li>
             <li>
               ❌ <strong>Miss Everything</strong> → Score resets to 0.
