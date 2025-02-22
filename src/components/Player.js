@@ -127,18 +127,17 @@ function Player({
 
     setTimeout(async () => {
       if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
-        // await player.pause().then(() => {
-        //   player.seek(startTime);
-        // });
-        player.seek(startTime);
+        await player.pause().then(() => {
+          player.seek(startTime);
+        });
       }
       setPaused(false);
     }, 1500);
     setTimeout(async () => {
       await player.setVolume(0.5).then(() => {
-        // player.resume();
+        player.resume();
       });
-    }, 2000);
+    }, 3000);
 
     // Disable cooldown after 3 seconds
     setTimeout(() => {
