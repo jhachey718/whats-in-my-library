@@ -132,25 +132,20 @@ function Player({
   };
 
   const playButtonHandler = async () => {
-    if (!isPlayerStarted) {
+    if (!isPlayerStarted && deviceId) {
       await playTrack();
       player.resume();
       setPaused(false);
     } else if (isPaused) {
       player.togglePlay();
       setPaused(false);
-    } else {
+    } else if (isPlayerStarted) {
       player.togglePlay();
       setPaused(true);
     }
   };
 
   const playTrack = async () => {
-    if (!deviceId) {
-      console.error("Device ID is not set.");
-      return;
-    }
-
     try {
       const response = await fetch(
         `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
