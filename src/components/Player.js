@@ -135,6 +135,7 @@ function Player({
     if (!isPlayerStarted && deviceId) {
       await playTrack();
       player.resume();
+      await player.activateElement();
       setPaused(false);
     } else if (isPaused) {
       player.togglePlay();
