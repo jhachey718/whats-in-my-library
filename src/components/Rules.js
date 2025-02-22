@@ -66,12 +66,15 @@ function Rules() {
             </li>
           </ul>
 
-          <h3>Challenge Yourself</h3>
-          <p>How well do you know your music?</p>
-
-          <h4>
+          <h3>Notes</h3>
+          <p>
+            For best experience do <strong>not</strong> play on
+            private/incognito browser. This app relies on the browser's storage
+            to save score and songs.
+          </p>
+          <p>
             Sorry for any bugs. A refresh of the page should fix most of them.
-          </h4>
+          </p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

@@ -88,9 +88,22 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
     const tracksItem = await localStorage.getItem("tracks");
     if (tracksItem) {
       const tracks = JSON.parse(LZString.decompress(tracksItem));
-      const isExpired = new Date().getTime() > tracks.expDate;
-      if (!isExpired) {
+      const tracksPosition = await localStorage.getItem("tracksPosition");
+      const isContinuing = await localStorage.getItem("continue");
+      if (tracksPosition && isContinuing === "true") {
+        const position = parseInt(tracksPosition, 10);
+        return tracks.list.slice(position, position + 400);
+      } else {
+        localStorage.setItem("tracksPosition", 0);
         const shuffledRetrievedTracks = await shuffleArray(tracks.list);
+        localStorage.setItem(
+          "tracks",
+          LZString.compress(
+            JSON.stringify({
+              list: shuffledRetrievedTracks,
+            })
+          )
+        );
         return shuffledRetrievedTracks.slice(0, 400);
       }
     }
@@ -123,18 +136,18 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
     }
     if (uniqueTracks.length >= 900) break;
   }
-  const date = new Date().setDate(new Date().getDate() + 1);
+
+  // Shuffle and return the first 400 tracks
+  const shuffledTracks = await shuffleArray(uniqueTracks);
   localStorage.setItem(
     "tracks",
     LZString.compress(
       JSON.stringify({
-        list: uniqueTracks,
-        expDate: date,
+        list: shuffledTracks,
       })
     )
   );
-
-  // Shuffle and return the first 400 tracks
-  const shuffledTracks = shuffleArray(uniqueTracks);
+  localStorage.setItem("tracksPosition", 0);
+  localStorage.setItem("continue", "false");
   return shuffledTracks.slice(0, 400);
 }

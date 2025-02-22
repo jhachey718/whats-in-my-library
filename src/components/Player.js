@@ -96,17 +96,32 @@ function Player({
     return;
   };
 
-  const nextButtonHandler = async () => {
-    if (isCooldown || !isPlayerStarted) return;
-
-    // Reset score if it hasn't changed
+  const updateGameState = () => {
+    const tempTracksPosition = localStorage.getItem("tracksPosition");
+    if (tempTracksPosition) {
+      localStorage.setItem(
+        "tracksPosition",
+        parseInt(tempTracksPosition, 10) + 1
+      );
+    } else {
+      localStorage.setItem("tracksPosition", 0);
+    }
     if (score === prevScore) {
       setScore(0);
       localStorage.setItem(`${millisecondsPlayed}score`, 0);
+      localStorage.setItem("continue", "false");
     } else {
       localStorage.setItem(`${millisecondsPlayed}score`, score);
+      localStorage.setItem("continue", "true");
     }
     setPrevScore(score);
+  };
+
+  const nextButtonHandler = async () => {
+    if (isCooldown || !isPlayerStarted) return;
+    if (!revealAnswers) {
+      updateGameState();
+    }
 
     if (tracksPosition === tracks.length - 1) {
       await refreshLibrary();
@@ -303,7 +318,10 @@ function Player({
         <div className="d-inline-flex gap-3 justify-content-center">
           <button
             className="btn btn-dark"
-            onClick={() => setRevealAnswers(true)}
+            onClick={() => {
+              updateGameState();
+              setRevealAnswers(true);
+            }}
           >
             Reveal Answers
           </button>

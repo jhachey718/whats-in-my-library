@@ -23,6 +23,7 @@ export default function Dashboard({ accessToken }) {
       try {
         setTracksFetched(true);
         const fetchedTracks = await fetchRandomTracks(accessToken, true);
+        console.log(fetchedTracks);
         setTracks(fetchedTracks);
       } catch (error) {
         console.error("Error in Dashboard fetching tracks:", error.message);

@@ -35,6 +35,7 @@ function App() {
       });
 
       if (!response.ok) {
+        window.location.replace("/");
         throw new Error(`HTTP Error! Status: ${response.status}`);
       }
 
