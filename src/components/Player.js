@@ -125,16 +125,17 @@ function Player({
 
     setTimeout(async () => {
       if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
-        await player.pause().then(() => {
-          player.seek(startTime);
-        });
+        // await player.pause().then(() => {
+        //   player.seek(startTime);
+        // });
+        player.seek(startTime);
       }
 
       setPaused(false);
     }, 1200);
     setTimeout(async () => {
       await player.setVolume(0.5).then(() => {
-        player.resume();
+        // player.resume();
       });
     }, 1700);
 
