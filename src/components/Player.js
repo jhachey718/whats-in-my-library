@@ -119,13 +119,17 @@ function Player({
     setAlbumArt(tracks[newPosition].album.images[1].url);
 
     setTimeout(async () => {
+      await player.pause();
+    }, 500);
+
+    setTimeout(async () => {
       if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
         await player.seek(startTime);
       }
       await player.setVolume(0.5);
       await player.resume();
       setPaused(false);
-    }, 3000);
+    }, 1500);
 
     // Disable cooldown after 3 seconds
     setTimeout(() => {
