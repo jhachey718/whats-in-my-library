@@ -111,7 +111,9 @@ function Player({
     setRevealAnswers(false);
     setCooldown(true);
     await player.setVolume(0.0).then(() => {
-      player.nextTrack();
+      setTimeout(() => {
+        player.nextTrack();
+      }, 500);
     });
     // await player.pause();
 
@@ -130,9 +132,8 @@ function Player({
         // });
         player.seek(startTime);
       }
-
       setPaused(false);
-    }, 1200);
+    }, 1500);
     setTimeout(async () => {
       await player.setVolume(0.5).then(() => {
         // player.resume();
