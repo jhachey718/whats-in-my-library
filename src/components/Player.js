@@ -30,9 +30,7 @@ function Player({
 
   useEffect(() => {
     const scoreItem = localStorage.getItem(`${millisecondsPlayed}score`);
-    console.log(scoreItem);
     if (scoreItem) {
-      console.log("Retrieving score");
       setScore(parseInt(scoreItem, 10));
       setPrevScore(parseInt(scoreItem, 10));
     } else {
@@ -91,7 +89,6 @@ function Player({
       setScore(0);
       localStorage.setItem(`${millisecondsPlayed}score`, 0);
     } else {
-      console.log("Setting Score");
       localStorage.setItem(`${millisecondsPlayed}score`, score);
     }
     setPrevScore(score);
