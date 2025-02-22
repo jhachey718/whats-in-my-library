@@ -81,6 +81,21 @@ function Player({
     // eslint-disable-next-line
   }, [accessToken]);
 
+  const refreshLibrary = async () => {
+    await player.pause();
+    setPaused(true);
+    setTracksPosition(0);
+    setRevealAnswers(false);
+    setAwaitingTracks(true);
+
+    const fetchedTracks = await fetchRandomTracks(accessToken, false);
+    setTracks(fetchedTracks);
+    setPlayerStarted(false);
+    setAlbumArt(fetchedTracks[0].album.images[1].url);
+    setAwaitingTracks(false);
+    return;
+  };
+
   const nextButtonHandler = async () => {
     if (isCooldown || !isPlayerStarted) return;
 
@@ -94,17 +109,7 @@ function Player({
     setPrevScore(score);
 
     if (tracksPosition === tracks.length - 1) {
-      await player.pause();
-      setPaused(true);
-      setTracksPosition(0);
-      setRevealAnswers(false);
-      setAwaitingTracks(true);
-
-      const fetchedTracks = await fetchRandomTracks(accessToken);
-      setTracks(fetchedTracks);
-      setPlayerStarted(false);
-      setAlbumArt(fetchedTracks[0].album.images[1].url);
-      setAwaitingTracks(false);
+      await refreshLibrary();
       return;
     }
 
@@ -113,11 +118,6 @@ function Player({
     await player.setVolume(0.0).then(() => {
       player.nextTrack();
     });
-    // await player.pause();
-
-    // setTimeout(async () => {
-    //   await player.pause();
-    // }, 300);
 
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
@@ -246,7 +246,7 @@ function Player({
     isPaused,
   ]);
   if (awaitingTracks) {
-    return <Loading text={"Finding more songs..."} />;
+    return <Loading text={"Refreshing library..."} />;
   } else {
     return (
       <div
@@ -300,12 +300,22 @@ function Player({
             setScore={setScore}
           />
         </div>
-        <div className="d-inline-flex justify-content-center">
+        <div className="d-inline-flex gap-3 justify-content-center">
           <button
             className="btn btn-dark"
             onClick={() => setRevealAnswers(true)}
           >
             Reveal Answers
+          </button>
+
+          <button
+            className="btn btn-dark"
+            onClick={() => {
+              setScore(0);
+              refreshLibrary();
+            }}
+          >
+            Refresh Library
           </button>
         </div>
       </div>

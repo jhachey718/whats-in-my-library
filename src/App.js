@@ -70,7 +70,7 @@ function App() {
       hasRefreshed.current = true;
       setTimeout(() => {
         refreshToken();
-      }, 1000);
+      }, 5000);
     }
     if (params) {
       getUserInfo();

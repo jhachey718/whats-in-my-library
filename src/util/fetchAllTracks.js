@@ -83,14 +83,16 @@ async function fetchPlaylistTracks(accessToken, playlistId, limit) {
   return tracks;
 }
 
-export async function fetchRandomTracks(accessToken) {
-  const tracksItem = await localStorage.getItem("tracks");
-  if (tracksItem) {
-    const tracks = JSON.parse(LZString.decompress(tracksItem));
-    const isExpired = new Date().getTime() > tracks.expDate;
-    if (!isExpired) {
-      const shuffledRetrievedTracks = await shuffleArray(tracks.list);
-      return shuffledRetrievedTracks.slice(0, 400);
+export async function fetchRandomTracks(accessToken, fromLocal) {
+  if (fromLocal) {
+    const tracksItem = await localStorage.getItem("tracks");
+    if (tracksItem) {
+      const tracks = JSON.parse(LZString.decompress(tracksItem));
+      const isExpired = new Date().getTime() > tracks.expDate;
+      if (!isExpired) {
+        const shuffledRetrievedTracks = await shuffleArray(tracks.list);
+        return shuffledRetrievedTracks.slice(0, 400);
+      }
     }
   }
   const trackIds = new Set();

@@ -34,6 +34,10 @@ function Rules() {
               Click <strong>Reveal Answers</strong> if needed (no penalty if you
               guessed at least one part).
             </li>
+            <li>
+              Click <strong>Refresh Library</strong> if you updated your Spotify
+              library or you just want some new songs.
+            </li>
             <li>Keep going and see how many you can get right!</li>
           </ol>
 
