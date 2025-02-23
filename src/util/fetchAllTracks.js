@@ -103,7 +103,7 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
             })
           )
         );
-        return shuffledRetrievedTracks.slice(0, 400);
+        return shuffledRetrievedTracks;
       }
     }
   }
@@ -147,5 +147,5 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
     )
   );
   localStorage.setItem("tracksPosition", 0);
-  return shuffledTracks.slice(0, 400);
+  return shuffledTracks;
 }

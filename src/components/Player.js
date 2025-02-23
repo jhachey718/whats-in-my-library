@@ -23,10 +23,10 @@ function Player({
   const [isCooldown, setCooldown] = useState(false);
   const [showArt, setShowArt] = useState(false);
   const [revealAnswers, setRevealAnswers] = useState(false);
-  const positionCheckIntervalRef = useRef(null);
   const [prevScore, setPrevScore] = useState(0);
   const [awaitingTracks, setAwaitingTracks] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const positionCheckIntervalRef = useRef(null);
   const startTime = 20000; //in milliseconds
 
   useEffect(() => {
@@ -67,6 +67,7 @@ function Player({
 
       player.addListener("ready", ({ device_id }) => {
         setDeviceId(device_id);
+        console.log(device_id);
       });
 
       player.connect();
@@ -133,30 +134,12 @@ function Player({
     setRevealAnswers(false);
     setCooldown(true);
     setAttempt((prev) => prev + 1);
-    await player.setVolume(0.0).then(() => {
-      player.nextTrack();
-    });
 
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
+    playTrack(newPosition);
     setAlbumArt(tracks[newPosition].album.images[1].url);
 
-    setTimeout(async () => {
-      if (tracks[newPosition].duration_ms > startTime + millisecondsPlayed) {
-        await player.pause().then(() => {
-          player.seek(startTime);
-        });
-      }
-
-      setPaused(false);
-    }, 1200);
-    setTimeout(async () => {
-      await player.setVolume(0.5).then(() => {
-        player.resume();
-      });
-    }, 1700);
-
-    // Disable cooldown after 3 seconds
     setTimeout(() => {
       setCooldown(false);
     }, 3000);
@@ -164,10 +147,10 @@ function Player({
 
   const playButtonHandler = async () => {
     if (!isPlayerStarted && deviceId) {
-      await playTrack();
-      await player.activateElement();
+      await transferPlayback();
+      await playTrack(tracksPosition);
       setPaused(false);
-    } else if (isPaused) {
+    } else if (isPaused && isPlayerStarted) {
       player.togglePlay();
       setPaused(false);
     } else if (isPlayerStarted) {
@@ -176,46 +159,67 @@ function Player({
     }
   };
 
-  const playTrack = async () => {
+  async function transferPlayback() {
+    if (!deviceId) {
+      console.error("No active device ID available");
+      return;
+    }
+
     try {
-      const response = await fetch(
-        `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            uris: trackUris,
-          }),
-        }
-      );
+      const response = await fetch("https://api.spotify.com/v1/me/player", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          device_ids: [deviceId],
+          play: false, // Set to true if you want playback to start immediately
+        }),
+      });
 
-      if (response.ok) {
-        player.addListener("player_state_changed", (state) => {
-          if (
-            state &&
-            !state.paused &&
-            state.position === 0 &&
-            tracks[tracksPosition].duration_ms > startTime + millisecondsPlayed
-          ) {
-            setTimeout(() => {
-              player
-                .seek(startTime)
-                .catch((err) => console.error("Error seeking:", err));
-            }, 500);
-          }
-
-          setPlayerStarted(true);
-        });
+      if (!response.ok) {
+        console.error("Failed to transfer playback", await response.json());
       } else {
-        console.error("Failed to start playback:", response.statusText);
+        console.log("Playback transferred to Web Player.");
       }
     } catch (error) {
-      console.error("Error starting playback:", error.message);
+      console.error("Error transferring playback:", error);
     }
-  };
+  }
+
+  async function playTrack(position) {
+    console.log(deviceId);
+    const url = "https://api.spotify.com/v1/me/player/play";
+    const body = {
+      device_id: deviceId,
+      uris: [trackUris[position]],
+      position_ms: startTime,
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (response.ok) {
+        console.log("Track started at", 20, "seconds");
+        setPaused(false);
+        setPlayerStarted(true);
+      } else {
+        const errorData = await response.json();
+        console.error("Error starting track:", errorData);
+        // window.location.replace("/");
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
+  }
 
   useEffect(() => {
     if (isPlayerStarted) {
@@ -262,6 +266,7 @@ function Player({
     millisecondsPlayed,
     isPaused,
   ]);
+
   if (awaitingTracks) {
     return <Loading text={"Refreshing library..."} />;
   } else {
