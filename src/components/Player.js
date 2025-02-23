@@ -147,6 +147,7 @@ function Player({
   const playButtonHandler = async () => {
     if (!isPlayerStarted && deviceId) {
       await transferPlayback();
+      await player.activateElement();
       await playTrack(tracksPosition);
       setPaused(false);
     } else if (isPaused && isPlayerStarted) {
