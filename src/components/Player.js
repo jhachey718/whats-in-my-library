@@ -26,6 +26,7 @@ function Player({
   const positionCheckIntervalRef = useRef(null);
   const [prevScore, setPrevScore] = useState(0);
   const [awaitingTracks, setAwaitingTracks] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const startTime = 20000; //in milliseconds
 
   useEffect(() => {
@@ -131,6 +132,7 @@ function Player({
 
     setRevealAnswers(false);
     setCooldown(true);
+    setAttempt((prev) => prev + 1);
     await player.setVolume(0.0).then(() => {
       player.nextTrack();
     });
@@ -297,22 +299,27 @@ function Player({
         <div className="d-inline-flex flex-column gap-3 justify-content-center">
           <GuessBox
             placeholder="Artist"
-            answer={tracks[tracksPosition].artists}
+            // answer={tracks[tracksPosition].artists}
+            answer="test"
             revealAnswer={revealAnswers}
             setScore={setScore}
+            attempt={attempt}
           />
           <GuessBox
             placeholder="Song"
             answer={tracks[tracksPosition].name}
             revealAnswer={revealAnswers}
             setScore={setScore}
+            attempt={attempt}
           />
           <GuessBox
             placeholder="Album"
-            answer={tracks[tracksPosition].album.name}
+            // answer={tracks[tracksPosition].album.name}
+            answer="test"
             setShowArt={setShowArt}
             revealAnswer={revealAnswers}
             setScore={setScore}
+            attempt={attempt}
           />
         </div>
         <div className="d-inline-flex gap-3 justify-content-center">

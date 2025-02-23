@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { similarityPercentage } from "../util/guessValidator";
-function GuessBox({ placeholder, answer, setShowArt, revealAnswer, setScore }) {
+function GuessBox({
+  placeholder,
+  answer,
+  setShowArt,
+  revealAnswer,
+  setScore,
+  attempt,
+}) {
   const [guess, setGuess] = useState("");
   const [isCorrect, setIsCorrect] = useState(false);
   const [pointValue, setPointValue] = useState("");
@@ -89,6 +96,7 @@ function GuessBox({ placeholder, answer, setShowArt, revealAnswer, setScore }) {
   }, [placeholder]);
   useEffect(() => {
     setGuess("");
+    setIsCorrect(false);
     if (setShowArt) {
       setShowArt(false);
     }
@@ -97,7 +105,7 @@ function GuessBox({ placeholder, answer, setShowArt, revealAnswer, setScore }) {
     } else {
       setAnswerString(answer);
     }
-  }, [answer, setShowArt]);
+  }, [answer, setShowArt, attempt]);
 
   return (
     <div className="d-flex gap-3 justify-content-center">
