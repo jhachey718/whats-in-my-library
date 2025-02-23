@@ -101,7 +101,7 @@ function App() {
     >
       <div
         style={{
-          marginTop: ".5rem",
+          marginTop: "0.5rem",
           position: "relative",
           width: "95%",
         }}
@@ -109,13 +109,22 @@ function App() {
         <div
           className="d-flex justify-content-between"
           style={{
-            marginBottom: "0.5 rem",
+            marginBottom: "0.75rem",
           }}
         >
           <Rules />
           <Refresh />
         </div>
-        <h1 className="text-center text-white">What's in my Library?</h1>
+        <h1
+          className="text-center text-white"
+          style={
+            {
+              // marginTop: ".75rem",
+            }
+          }
+        >
+          What's in my Library?
+        </h1>
       </div>
       {params && !isPremium && (
         <h2
