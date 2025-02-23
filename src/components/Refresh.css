@@ -17,9 +17,8 @@
   }
   
   .refresh-button svg {
-    display: inline;
-    width: 1.5rem;
     height: 1.5rem;
+    width: auto;
     color: white;
   }
   
