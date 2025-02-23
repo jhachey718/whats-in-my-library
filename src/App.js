@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Dashboard from "./components/Dashboard";
 import LoginButton from "./components/LoginButton";
 import Rules from "./components/Rules";
+import Refresh from "./components/Refresh";
 import { getHashParams } from "./util/auth";
 import { useState, useEffect, useRef } from "react";
 function App() {
@@ -98,8 +99,22 @@ function App() {
         paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
-      <div style={{ marginTop: "0.5rem", position: "relative" }}>
-        <Rules />
+      <div
+        style={{
+          marginTop: ".5rem",
+          position: "relative",
+          width: "95%",
+        }}
+      >
+        <div
+          className="d-flex justify-content-between"
+          style={{
+            marginBottom: "0.5 rem",
+          }}
+        >
+          <Rules />
+          <Refresh />
+        </div>
         <h1 className="text-center text-white">What's in my Library?</h1>
       </div>
       {params && !isPremium && (

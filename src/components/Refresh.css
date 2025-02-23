@@ -1,0 +1,39 @@
+.refresh-button {
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background-color: #1e1740;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.151);
+  }
+  
+  .refresh-button:hover {
+    background-color: #333;
+  }
+  
+  .refresh-button svg {
+    display: inline;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: white;
+  }
+  
+  .refresh-button:focus svg {
+    animation: spin_357 0.5s linear;
+  }
+  
+  @keyframes spin_357 {
+    from {
+      transform: rotate(0deg);
+    }
+  
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
