@@ -299,8 +299,7 @@ function Player({
         <div className="d-inline-flex flex-column gap-3 justify-content-center">
           <GuessBox
             placeholder="Artist"
-            // answer={tracks[tracksPosition].artists}
-            answer="test"
+            answer={tracks[tracksPosition].artists}
             revealAnswer={revealAnswers}
             setScore={setScore}
             attempt={attempt}
@@ -314,8 +313,7 @@ function Player({
           />
           <GuessBox
             placeholder="Album"
-            // answer={tracks[tracksPosition].album.name}
-            answer="test"
+            answer={tracks[tracksPosition].album.name}
             setShowArt={setShowArt}
             revealAnswer={revealAnswers}
             setScore={setScore}
