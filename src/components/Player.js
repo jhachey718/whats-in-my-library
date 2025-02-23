@@ -67,7 +67,6 @@ function Player({
 
       player.addListener("ready", ({ device_id }) => {
         setDeviceId(device_id);
-        console.log(device_id);
       });
 
       player.connect();
@@ -180,8 +179,6 @@ function Player({
 
       if (!response.ok) {
         console.error("Failed to transfer playback", await response.json());
-      } else {
-        console.log("Playback transferred to Web Player.");
       }
     } catch (error) {
       console.error("Error transferring playback:", error);
@@ -189,7 +186,6 @@ function Player({
   }
 
   async function playTrack(position) {
-    console.log(deviceId);
     const url = "https://api.spotify.com/v1/me/player/play";
     const body = {
       device_id: deviceId,
@@ -208,7 +204,6 @@ function Player({
       });
 
       if (response.ok) {
-        console.log("Track started at", 20, "seconds");
         setPaused(false);
         setPlayerStarted(true);
       } else {
