@@ -189,11 +189,15 @@ function Player({
   }
 
   async function playTrack(position) {
+    const positionMs = await (tracks[position].duration_ms >
+    startTime + millisecondsPlayed
+      ? startTime
+      : 0);
     const url = "https://api.spotify.com/v1/me/player/play";
     const body = {
       device_id: deviceId,
       uris: [trackUris[position]],
-      position_ms: startTime,
+      position_ms: positionMs,
     };
 
     try {
@@ -209,6 +213,12 @@ function Player({
       if (response.ok) {
         setPaused(false);
         setPlayerStarted(true);
+        if (millisecondsPlayed === 1400)
+          setTimeout(() => {
+            setPaused(true);
+            player.pause();
+            player.seek(startTime);
+          }, 1750);
       } else {
         const errorData = await response.json();
         console.error("Error starting track:", errorData);

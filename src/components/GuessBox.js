@@ -50,7 +50,7 @@ function GuessBox({
       } else {
         newAnswer = answer
           .toLowerCase()
-          .split(/ - | \(feat| \(remast/i)[0]
+          .split(/ - | \(feat| \(remast| feat| \(bonus| \(reprise| \(demo /i)[0]
           .trim();
       }
       setIsCorrect(
