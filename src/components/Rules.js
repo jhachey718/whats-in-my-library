@@ -25,7 +25,10 @@ function Rules() {
         <Modal.Body>
           <h3>How to Play</h3>
           <ol>
-            <li>Listen to a randomly selected song clip.</li>
+            <li>
+              Listen to a randomly selected song clip from{" "}
+              <strong>your Spotify Library</strong>.
+            </li>
             <li>
               Guess the <strong>title, artist, and album</strong> to score
               points.
@@ -36,7 +39,7 @@ function Rules() {
             </li>
             <li>
               Click <strong>Refresh Library</strong> if you updated your Spotify
-              library or you just want some new songs.
+              Library or you just want some new songs.
             </li>
             <li>Keep going and see how many you can get right!</li>
           </ol>
@@ -73,7 +76,8 @@ function Rules() {
             to save score and songs.
           </p>
           <p>
-            Sorry for any bugs. A refresh of the page should fix most of them.
+            Sorry for any bugs. Pressing the refresh button in the top left
+            should fix most of them.
           </p>
         </Modal.Body>
         <Modal.Footer>
