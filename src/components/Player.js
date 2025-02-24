@@ -153,8 +153,6 @@ function Player({
       await player.activateElement();
       setTimeout(async () => {
         await playTrack(tracksPosition);
-        await transferPlayback();
-        await player.activateElement();
       }, 1000);
       setTimeout(() => {
         setCooldown(false);
