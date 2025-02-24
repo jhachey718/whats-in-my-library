@@ -149,8 +149,8 @@ function Player({
     if (!isPlayerStarted && deviceId) {
       setCooldown(true);
       await transferPlayback();
+      await player.activateElement();
       setTimeout(async () => {
-        await player.activateElement();
         await playTrack(tracksPosition);
       }, 1000);
       setTimeout(() => {
