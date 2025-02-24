@@ -145,12 +145,17 @@ function Player({
   };
 
   const playButtonHandler = async () => {
+    if (isCooldown) return;
     if (!isPlayerStarted && deviceId) {
+      setCooldown(true);
       await transferPlayback();
       setTimeout(async () => {
         await player.activateElement();
         await playTrack(tracksPosition);
       }, 1000);
+      setTimeout(() => {
+        setCooldown(false);
+      }, 2000);
       setPaused(false);
     } else if (isPaused && isPlayerStarted) {
       player.togglePlay();
