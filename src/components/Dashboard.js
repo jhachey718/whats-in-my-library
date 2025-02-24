@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Player from "./Player";
 import { fetchRandomTracks } from "../util/fetchAllTracks";
 import Score from "./Score";
+import CustomModal from "./CustomModal";
 import Loading from "./Loading";
 import RadioButton from "./RadioButton";
 
@@ -11,10 +12,18 @@ export default function Dashboard({ accessToken }) {
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState("5000");
   const [tracksFetched, setTracksFetched] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const antiCheatMessage = (
+    <p>Please finish your current game before switching modes.</p>
+  );
 
   const radioButtonHandler = (id, milliseconds) => {
-    setSelected(id);
-    setMillisecondsPlayed(milliseconds);
+    if (score === 0) {
+      setSelected(id);
+      setMillisecondsPlayed(milliseconds);
+    } else {
+      setShowModal(true);
+    }
   };
 
   useEffect(() => {
@@ -86,6 +95,13 @@ export default function Dashboard({ accessToken }) {
       {tracks.length !== 0 && (
         <Score scoreValue={score} millisecondsPlayed={millisecondsPlayed} />
       )}
+
+      <CustomModal
+        show={showModal}
+        close={() => setShowModal(false)}
+        title={<h2>No Cheating</h2>}
+        bodyContent={antiCheatMessage}
+      />
     </>
   );
 }

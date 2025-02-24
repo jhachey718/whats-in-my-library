@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button } from "react-bootstrap";
+import CustomModal from "./CustomModal";
 import "./Rules.css";
 
 function Rules() {
@@ -7,6 +7,66 @@ function Rules() {
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
+
+  const rulesContent = (
+    <>
+      <h3>How to Play</h3>
+      <ol>
+        <li>
+          Listen to a randomly selected song clip from
+          <strong>your Spotify Library</strong>.
+        </li>
+        <li>
+          Guess the <strong>title, artist, and album</strong> to score points.
+        </li>
+        <li>
+          Click <strong>Reveal Answers</strong> if needed (no penalty if you
+          guessed at least one part).
+        </li>
+        <li>
+          Click <strong>Refresh Library</strong> if you updated your Spotify
+          Library or you just want some new songs.
+        </li>
+        <li>Keep going and see how many you can get right!</li>
+      </ol>
+
+      <h3>Game Modes</h3>
+      <ul>
+        <li>
+          ♫ <strong>1 Second Mode</strong>
+        </li>
+        <li>
+          ♫ <strong>5 Second Mode</strong>
+        </li>
+        <li>
+          ♫ <strong>10 Second Mode</strong>
+        </li>
+      </ul>
+      <p>Each mode has its own score and high score.</p>
+
+      <h3>Scoring</h3>
+      <ul>
+        <li>
+          ✅ <strong>Correct Guess</strong> → Keep your score. Progress is kept
+          even after refreshing the page!
+        </li>
+        <li>
+          ❌ <strong>Miss Everything</strong> → Score resets to 0.
+        </li>
+      </ul>
+
+      <h3>Notes</h3>
+      <p>
+        For best experience do <strong>not</strong> play on private/incognito
+        browser. This app relies on the browser's storage to save score and
+        songs.
+      </p>
+      <p>
+        Sorry for any bugs. Pressing the refresh button in the top left should
+        fix most of them.
+      </p>
+    </>
+  );
 
   return (
     <>
@@ -16,76 +76,12 @@ function Rules() {
         </svg>
       </button>
 
-      <Modal show={showModal} onHide={handleClose} className="custom-modal">
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <h2>Rules</h2>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h3>How to Play</h3>
-          <ol>
-            <li>
-              Listen to a randomly selected song clip from{" "}
-              <strong>your Spotify Library</strong>.
-            </li>
-            <li>
-              Guess the <strong>title, artist, and album</strong> to score
-              points.
-            </li>
-            <li>
-              Click <strong>Reveal Answers</strong> if needed (no penalty if you
-              guessed at least one part).
-            </li>
-            <li>
-              Click <strong>Refresh Library</strong> if you updated your Spotify
-              Library or you just want some new songs.
-            </li>
-            <li>Keep going and see how many you can get right!</li>
-          </ol>
-
-          <h3>Game Modes</h3>
-          <ul>
-            <li>
-              ♫ <strong>1 Second Mode</strong>
-            </li>
-            <li>
-              ♫ <strong>5 Second Mode</strong>
-            </li>
-            <li>
-              ♫ <strong>10 Second Mode</strong>
-            </li>
-          </ul>
-          <p>Each mode has its own score and high score.</p>
-
-          <h3>Scoring</h3>
-          <ul>
-            <li>
-              ✅ <strong>Correct Guess</strong> → Keep your score. Progress is
-              kept even after refreshing the page!
-            </li>
-            <li>
-              ❌ <strong>Miss Everything</strong> → Score resets to 0.
-            </li>
-          </ul>
-
-          <h3>Notes</h3>
-          <p>
-            For best experience do <strong>not</strong> play on
-            private/incognito browser. This app relies on the browser's storage
-            to save score and songs.
-          </p>
-          <p>
-            Sorry for any bugs. Pressing the refresh button in the top left
-            should fix most of them.
-          </p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CustomModal
+        show={showModal}
+        close={handleClose}
+        title={<h2>Rules</h2>}
+        bodyContent={rulesContent}
+      ></CustomModal>
     </>
   );
 }
