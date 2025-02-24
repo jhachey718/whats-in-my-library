@@ -227,7 +227,7 @@ function Player({
       } else {
         const errorData = await response.json();
         console.error("Error starting track:", errorData);
-        location.reload();
+        window.location.reload();
       }
     } catch (error) {
       console.error("Request failed:", error);
