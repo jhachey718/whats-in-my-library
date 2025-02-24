@@ -30,6 +30,7 @@ function Player({
   const startTime = 20000; //in milliseconds
 
   useEffect(() => {
+    localStorage.setItem("millisecondsPlayed", millisecondsPlayed);
     const scoreItem = localStorage.getItem(`${millisecondsPlayed}score`);
     if (scoreItem) {
       setScore(parseInt(scoreItem, 10));

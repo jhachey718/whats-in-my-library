@@ -9,7 +9,7 @@ export default function Dashboard({ accessToken }) {
   const [millisecondsPlayed, setMillisecondsPlayed] = useState(5000);
   const [tracks, setTracks] = useState([]);
   const [score, setScore] = useState(0);
-  const [selected, setSelected] = useState("2");
+  const [selected, setSelected] = useState("5000");
   const [tracksFetched, setTracksFetched] = useState(false);
 
   const radioButtonHandler = (id, milliseconds) => {
@@ -18,8 +18,14 @@ export default function Dashboard({ accessToken }) {
   };
 
   useEffect(() => {
+    const millisecondsPlayedItem = localStorage.getItem("millisecondsPlayed");
+    if (millisecondsPlayedItem) {
+      setSelected(millisecondsPlayedItem);
+      setMillisecondsPlayed(parseInt(millisecondsPlayedItem, 10));
+    }
     const fetchTracks = async () => {
       if (tracksFetched) return;
+
       try {
         setTracksFetched(true);
         const fetchedTracks = await fetchRandomTracks(accessToken, true);
@@ -42,21 +48,21 @@ export default function Dashboard({ accessToken }) {
           style={{ marginTop: "1rem" }}
         >
           <RadioButton
-            id="1"
+            id="1400"
             label="1s"
             value={1400}
             selected={selected}
             onChange={radioButtonHandler}
           />
           <RadioButton
-            id="2"
+            id="5000"
             label="5s"
             value={5000}
             selected={selected}
             onChange={radioButtonHandler}
           />
           <RadioButton
-            id="3"
+            id="10000"
             label="10s"
             value={10000}
             selected={selected}
