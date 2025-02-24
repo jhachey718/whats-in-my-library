@@ -121,11 +121,13 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
 
   // Fetch playlists and their tracks
   const playlists = await fetchUserPlaylists(accessToken, 100);
+  let numberOfPlaylistTracks = 0;
   for (const playlist of playlists) {
+    numberOfPlaylistTracks = Math.floor(Math.random() * (150 - 30) + 30);
     const playlistTracks = await fetchPlaylistTracks(
       accessToken,
       playlist.id,
-      200
+      numberOfPlaylistTracks
     );
     for (const track of playlistTracks) {
       if (!trackIds.has(track.id)) {
