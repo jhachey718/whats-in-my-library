@@ -132,14 +132,16 @@ function Player({
       return;
     }
 
-    setRevealAnswers(false);
+    await setRevealAnswers(false);
     setCooldown(true);
     setAttempt((prev) => prev + 1);
 
     const newPosition = tracksPosition + 1;
     setTracksPosition(newPosition);
     playTrack(newPosition);
-    setAlbumArt(tracks[newPosition].album.images[1].url);
+    setTimeout(() => {
+      setAlbumArt(tracks[newPosition].album.images[1].url);
+    }, 1000);
 
     setTimeout(() => {
       setCooldown(false);
@@ -348,9 +350,12 @@ function Player({
         <div className="d-inline-flex gap-3 justify-content-center">
           <button
             className="btn btn-dark"
+            disabled={isCooldown}
             onClick={() => {
-              updateGameState();
-              setRevealAnswers(true);
+              if (!isCooldown) {
+                updateGameState();
+                setRevealAnswers(true);
+              }
             }}
           >
             Reveal Answers
