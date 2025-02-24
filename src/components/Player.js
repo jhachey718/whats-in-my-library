@@ -26,6 +26,7 @@ function Player({
   const [prevScore, setPrevScore] = useState(0);
   const [awaitingTracks, setAwaitingTracks] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const [hasPaused, setHasPaused] = useState(false);
   const positionCheckIntervalRef = useRef(null);
   const startTime = 20000; //in milliseconds
 
@@ -147,9 +148,11 @@ function Player({
 
   const playButtonHandler = async () => {
     if (isCooldown) return;
+    if (!hasPaused) {
+      await transferPlayback();
+    }
     if (!isPlayerStarted && deviceId) {
       setCooldown(true);
-      await transferPlayback();
       await player.activateElement();
       setTimeout(async () => {
         await playTrack(tracksPosition);
@@ -159,11 +162,11 @@ function Player({
       }, 2000);
       setPaused(false);
     } else if (isPaused && isPlayerStarted) {
-      await transferPlayback();
+      setHasPaused(true);
       player.resume();
       setPaused(false);
     } else if (isPlayerStarted) {
-      await transferPlayback();
+      setHasPaused(true);
       player.pause();
       setPaused(true);
     }
