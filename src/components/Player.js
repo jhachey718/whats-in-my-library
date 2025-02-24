@@ -151,9 +151,9 @@ function Player({
       setCooldown(true);
       await transferPlayback();
       await player.activateElement();
+      await transferPlayback();
+      await player.activateElement();
       setTimeout(async () => {
-        await transferPlayback();
-        await player.activateElement();
         await playTrack(tracksPosition);
       }, 1000);
       setTimeout(() => {
@@ -161,10 +161,10 @@ function Player({
       }, 2000);
       setPaused(false);
     } else if (isPaused && isPlayerStarted) {
-      player.togglePlay();
+      player.resume();
       setPaused(false);
     } else if (isPlayerStarted) {
-      player.togglePlay();
+      player.pause();
       setPaused(true);
     }
   };
