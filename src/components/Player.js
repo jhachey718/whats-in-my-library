@@ -152,6 +152,7 @@ function Player({
       await transferPlayback();
       await player.activateElement();
       setTimeout(async () => {
+        await transferPlayback();
         await playTrack(tracksPosition);
       }, 1000);
       setTimeout(() => {
