@@ -91,7 +91,7 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
       const tracksPosition = await localStorage.getItem("tracksPosition");
       if (tracksPosition) {
         const position = parseInt(tracksPosition, 10);
-        return tracks.list.slice(position, position + 400);
+        return tracks.list.slice(position, tracks.list.length - 1);
       } else {
         localStorage.setItem("tracksPosition", 0);
         const shuffledRetrievedTracks = await shuffleArray(tracks.list);

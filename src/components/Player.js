@@ -28,7 +28,7 @@ function Player({
   const [attempt, setAttempt] = useState(0);
   const [hasPaused, setHasPaused] = useState(false);
   const positionCheckIntervalRef = useRef(null);
-  const startTime = 20000; //in milliseconds
+  const startTime = 25000; //in milliseconds
 
   useEffect(() => {
     localStorage.setItem("millisecondsPlayed", millisecondsPlayed);
