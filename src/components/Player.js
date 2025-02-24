@@ -157,15 +157,17 @@ function Player({
       }, 500);
       setTimeout(async () => {
         await playTrack(tracksPosition);
-      }, 1000);
+      }, 1500);
       setTimeout(() => {
         setCooldown(false);
       }, 2000);
       setPaused(false);
     } else if (isPaused && isPlayerStarted) {
+      await transferPlayback();
       player.resume();
       setPaused(false);
     } else if (isPlayerStarted) {
+      await transferPlayback();
       player.pause();
       setPaused(true);
     }
