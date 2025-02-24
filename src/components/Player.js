@@ -227,8 +227,15 @@ function Player({
       } else {
         const errorData = await response.json();
         console.error("Error starting track:", errorData);
-        await setPlayerStarted(false);
-        playButtonHandler();
+        setCooldown(true);
+        await transferPlayback();
+        await player.activateElement();
+        setTimeout(async () => {
+          await playTrack(tracksPosition);
+        }, 1000);
+        setTimeout(() => {
+          setCooldown(false);
+        }, 2000);
       }
     } catch (error) {
       console.error("Request failed:", error);
