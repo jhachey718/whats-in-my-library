@@ -227,11 +227,12 @@ function Player({
       } else {
         const errorData = await response.json();
         console.error("Error starting track:", errorData);
-        window.location.reload();
+        await setPlayerStarted(false);
+        playButtonHandler();
       }
     } catch (error) {
       console.error("Request failed:", error);
-      setPaused(false);
+      window.location.reload();
     }
   }
 
