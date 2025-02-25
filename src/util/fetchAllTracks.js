@@ -32,6 +32,42 @@ async function fetchSavedTracks(accessToken, limit) {
   return allTracks.slice(0, limit); // Ensure we only return up to the requested limit
 }
 
+async function fetchUserAlbums(accessToken, limit) {
+  let albums = [];
+  let offset = 0;
+
+  try {
+    while (albums.length < limit) {
+      const response = await fetch(
+        `https://api.spotify.com/v1/me/albums?limit=50&offset=${offset}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+      const data = await response.json();
+      if (!data.items.length) break;
+
+      albums.push(...data.items);
+      offset += 50;
+    }
+  } catch (error) {
+    console.error("Error fetching albums:", error);
+  }
+
+  // Make sure data is returned in expected format
+  const tracksWithAlbumInfo = albums.flatMap((albumItem) =>
+    albumItem.album.tracks.items.map((track) => ({
+      ...track,
+      album: {
+        name: albumItem.album.name,
+        images: ["", albumItem.album.images[1]],
+      },
+    }))
+  );
+
+  return shuffleArray(tracksWithAlbumInfo);
+}
+
 async function fetchUserPlaylists(accessToken, limit) {
   let playlists = [];
   let offset = 0;
@@ -119,6 +155,15 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
     }
   }
 
+  const albumTracks = await fetchUserAlbums(accessToken, 50);
+  for (const track of albumTracks) {
+    if (!trackIds.has(track.id)) {
+      trackIds.add(track.id);
+      uniqueTracks.push(track);
+    }
+    if (uniqueTracks.length >= 500) break;
+  }
+
   // Fetch playlists and their tracks
   const playlists = await fetchUserPlaylists(accessToken, 100);
   let numberOfPlaylistTracks = 0;
@@ -135,10 +180,9 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
         uniqueTracks.push(track);
       }
     }
-    if (uniqueTracks.length >= 900) break;
+    if (uniqueTracks.length >= 700) break;
   }
 
-  // Shuffle and return the first 400 tracks
   const shuffledTracks = await shuffleArray(uniqueTracks);
   localStorage.setItem(
     "tracks",
