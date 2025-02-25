@@ -62,7 +62,7 @@ function Rules() {
         songs.
       </p>
       <p>
-        Sorry for any bugs. Pressing the refresh button in the top left should
+        Sorry for any bugs. Pressing the refresh button in the top right should
         fix most of them.
       </p>
     </>
