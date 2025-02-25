@@ -8,11 +8,11 @@ function shuffleArray(array) {
 }
 
 async function fetchSavedTracks(accessToken, limit) {
-  let allTracks = [];
+  let savedTracks = [];
   let offset = 0;
 
   try {
-    while (allTracks.length < limit) {
+    while (savedTracks.length < limit) {
       const response = await fetch(
         `https://api.spotify.com/v1/me/tracks?limit=50&offset=${offset}`,
         {
@@ -22,14 +22,15 @@ async function fetchSavedTracks(accessToken, limit) {
       const data = await response.json();
       if (!data.items.length) break;
 
-      allTracks.push(...data.items.map((item) => item.track));
+      savedTracks.push(...data.items.map((item) => item.track));
       offset += 50;
     }
   } catch (error) {
     console.error("Error fetching liked tracks:", error);
   }
 
-  return allTracks.slice(0, limit); // Ensure we only return up to the requested limit
+  const shuffledSavedTracks = await shuffleArray(savedTracks);
+  return shuffledSavedTracks.slice(0, 100);
 }
 
 async function fetchUserAlbums(accessToken, limit) {
@@ -147,7 +148,7 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
   const uniqueTracks = [];
 
   // Fetch liked tracks
-  const likedTracks = await fetchSavedTracks(accessToken, 100);
+  const likedTracks = await fetchSavedTracks(accessToken, 300);
   for (const track of likedTracks) {
     if (!trackIds.has(track.id)) {
       trackIds.add(track.id);
