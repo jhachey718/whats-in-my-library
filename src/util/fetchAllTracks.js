@@ -1,4 +1,5 @@
 import LZString from "lz-string";
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -22,15 +23,26 @@ async function fetchSavedTracks(accessToken, limit) {
       const data = await response.json();
       if (!data.items.length) break;
 
-      savedTracks.push(...data.items.map((item) => item.track));
+      savedTracks.push(
+        ...data.items.map(({ track }) => ({
+          name: track.name,
+          id: track.id,
+          uri: track.uri, // Added URI field
+          album: {
+            name: track.album.name,
+            images: track.album.images,
+          },
+          artists: track.artists.map((artist) => ({ name: artist.name })),
+          duration_ms: track.duration_ms,
+        }))
+      );
       offset += 50;
     }
   } catch (error) {
     console.error("Error fetching liked tracks:", error);
   }
 
-  const shuffledSavedTracks = await shuffleArray(savedTracks);
-  return shuffledSavedTracks.slice(0, 100);
+  return shuffleArray(savedTracks).slice(0, 100);
 }
 
 async function fetchUserAlbums(accessToken, limit) {
@@ -55,18 +67,21 @@ async function fetchUserAlbums(accessToken, limit) {
     console.error("Error fetching albums:", error);
   }
 
-  // Make sure data is returned in expected format
-  const tracksWithAlbumInfo = albums.flatMap((albumItem) =>
-    albumItem.album.tracks.items.map((track) => ({
-      ...track,
-      album: {
-        name: albumItem.album.name,
-        images: ["", albumItem.album.images[1]],
-      },
-    }))
+  return shuffleArray(
+    albums.flatMap((albumItem) =>
+      albumItem.album.tracks.items.map((track) => ({
+        name: track.name,
+        id: track.id,
+        uri: track.uri, // Added URI field
+        album: {
+          name: albumItem.album.name,
+          images: albumItem.album.images,
+        },
+        artists: track.artists.map((artist) => ({ name: artist.name })),
+        duration_ms: track.duration_ms,
+      }))
+    )
   );
-
-  return shuffleArray(tracksWithAlbumInfo);
 }
 
 async function fetchUserPlaylists(accessToken, limit) {
@@ -90,9 +105,8 @@ async function fetchUserPlaylists(accessToken, limit) {
   } catch (error) {
     console.error("Error fetching playlists:", error);
   }
-  const shufflePlaylists = await shuffleArray(playlists);
 
-  return shufflePlaylists;
+  return shuffleArray(playlists);
 }
 
 async function fetchPlaylistTracks(accessToken, playlistId, limit) {
@@ -110,7 +124,19 @@ async function fetchPlaylistTracks(accessToken, playlistId, limit) {
       const data = await response.json();
       if (!data.items.length) break;
 
-      tracks.push(...data.items.map((item) => item.track));
+      tracks.push(
+        ...data.items.map(({ track }) => ({
+          name: track.name,
+          id: track.id,
+          uri: track.uri, // Added URI field
+          album: {
+            name: track.album.name,
+            images: track.album.images,
+          },
+          artists: track.artists.map((artist) => ({ name: artist.name })),
+          duration_ms: track.duration_ms,
+        }))
+      );
       offset += 50;
     }
   } catch (error) {
@@ -122,28 +148,25 @@ async function fetchPlaylistTracks(accessToken, playlistId, limit) {
 
 export async function fetchRandomTracks(accessToken, fromLocal) {
   if (fromLocal) {
-    const tracksItem = await localStorage.getItem("tracks");
+    const tracksItem = localStorage.getItem("tracks");
     if (tracksItem) {
       const tracks = JSON.parse(LZString.decompress(tracksItem));
-      const tracksPosition = await localStorage.getItem("tracksPosition");
+      const tracksPosition = localStorage.getItem("tracksPosition");
       if (tracksPosition) {
         const position = parseInt(tracksPosition, 10);
-        return tracks.list.slice(position, tracks.list.length - 1);
+        return tracks.list.slice(position);
       } else {
         localStorage.setItem("tracksPosition", 0);
-        const shuffledRetrievedTracks = await shuffleArray(tracks.list);
+        const shuffledTracks = shuffleArray(tracks.list);
         localStorage.setItem(
           "tracks",
-          LZString.compress(
-            JSON.stringify({
-              list: shuffledRetrievedTracks,
-            })
-          )
+          LZString.compress(JSON.stringify({ list: shuffledTracks }))
         );
-        return shuffledRetrievedTracks;
+        return shuffledTracks;
       }
     }
   }
+
   const trackIds = new Set();
   const uniqueTracks = [];
 
@@ -156,6 +179,7 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
     }
   }
 
+  // Fetch album tracks
   const albumTracks = await fetchUserAlbums(accessToken, 50);
   for (const track of albumTracks) {
     if (!trackIds.has(track.id)) {
@@ -167,9 +191,8 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
 
   // Fetch playlists and their tracks
   const playlists = await fetchUserPlaylists(accessToken, 100);
-  let numberOfPlaylistTracks = 0;
   for (const playlist of playlists) {
-    numberOfPlaylistTracks = Math.floor(Math.random() * (150 - 30) + 30);
+    const numberOfPlaylistTracks = Math.floor(Math.random() * (150 - 30) + 30);
     const playlistTracks = await fetchPlaylistTracks(
       accessToken,
       playlist.id,
@@ -184,14 +207,10 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
     if (uniqueTracks.length >= 700) break;
   }
 
-  const shuffledTracks = await shuffleArray(uniqueTracks);
+  const shuffledTracks = shuffleArray(uniqueTracks);
   localStorage.setItem(
     "tracks",
-    LZString.compress(
-      JSON.stringify({
-        list: shuffledTracks,
-      })
-    )
+    LZString.compress(JSON.stringify({ list: shuffledTracks }))
   );
   localStorage.setItem("tracksPosition", 0);
   return shuffledTracks;

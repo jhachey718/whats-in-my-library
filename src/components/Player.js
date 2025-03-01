@@ -122,7 +122,6 @@ function Player({
   };
 
   const nextButtonHandler = async () => {
-    if (isCooldown || !isPlayerStarted) return;
     if (!revealAnswers) {
       updateGameState();
     }
@@ -133,7 +132,6 @@ function Player({
     }
 
     await setRevealAnswers(false);
-    setCooldown(true);
     setAttempt((prev) => prev + 1);
 
     const newPosition = tracksPosition + 1;
@@ -329,7 +327,20 @@ function Player({
             isPaused={isPaused}
           />
           <NextButton
-            nextButtonHandler={nextButtonHandler}
+            nextButtonHandler={() => {
+              if (isCooldown || !isPlayerStarted) return;
+              setCooldown(true);
+              console.log(prevScore + 6);
+              console.log(score);
+              if (!revealAnswers && score !== prevScore + 6) {
+                setRevealAnswers(true);
+                setTimeout(() => {
+                  nextButtonHandler();
+                }, 3000);
+              } else {
+                nextButtonHandler();
+              }
+            }}
             isCooldown={isCooldown}
           />
         </div>
