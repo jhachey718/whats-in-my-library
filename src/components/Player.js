@@ -125,8 +125,6 @@ function Player({
   const nextButtonHandler = async () => {
     if (isCooldown || !isPlayerStarted) return;
     setCooldown(true);
-    console.log(prevScore + 6);
-    console.log(score);
     if (!revealAnswers && score !== prevScore + 6) {
       await updateGameState();
       setRevealAnswers(true);
