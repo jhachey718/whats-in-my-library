@@ -112,16 +112,33 @@ function Player({
     }
     if (score === prevScore) {
       setScore(0);
+      setPrevScore(0);
       localStorage.setItem("1400score", 0);
       localStorage.setItem("5000score", 0);
       localStorage.setItem("10000score", 0);
     } else {
       localStorage.setItem(`${millisecondsPlayed}score`, score);
+      setPrevScore(score);
     }
-    setPrevScore(score);
   };
 
   const nextButtonHandler = async () => {
+    if (isCooldown || !isPlayerStarted) return;
+    setCooldown(true);
+    console.log(prevScore + 6);
+    console.log(score);
+    if (!revealAnswers && score !== prevScore + 6) {
+      await updateGameState();
+      setRevealAnswers(true);
+      setTimeout(() => {
+        nextButtonHandlerHelper();
+      }, 3000);
+    } else {
+      nextButtonHandlerHelper();
+    }
+  };
+
+  const nextButtonHandlerHelper = async () => {
     if (!revealAnswers) {
       updateGameState();
     }
@@ -327,20 +344,7 @@ function Player({
             isPaused={isPaused}
           />
           <NextButton
-            nextButtonHandler={() => {
-              if (isCooldown || !isPlayerStarted) return;
-              setCooldown(true);
-              console.log(prevScore + 6);
-              console.log(score);
-              if (!revealAnswers && score !== prevScore + 6) {
-                setRevealAnswers(true);
-                setTimeout(() => {
-                  nextButtonHandler();
-                }, 3000);
-              } else {
-                nextButtonHandler();
-              }
-            }}
+            nextButtonHandler={nextButtonHandler}
             isCooldown={isCooldown}
           />
         </div>
