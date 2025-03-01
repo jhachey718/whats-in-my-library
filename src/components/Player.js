@@ -259,6 +259,7 @@ function Player({
             tracks[tracksPosition].duration_ms > startTime + millisecondsPlayed
               ? startTime + millisecondsPlayed
               : millisecondsPlayed;
+          const startPoint = stopPoint - millisecondsPlayed;
 
           if (currentPosition >= stopPoint && !isCooldown) {
             clearInterval(positionCheckIntervalRef.current);
@@ -266,7 +267,16 @@ function Player({
 
             await player.pause();
             setPaused(true);
-            await player.seek(stopPoint - millisecondsPlayed);
+            await player.seek(startPoint);
+          }
+
+          if (currentPosition < startPoint) {
+            clearInterval(positionCheckIntervalRef.current);
+            positionCheckIntervalRef.current = null;
+
+            await player.pause();
+            setPaused(true);
+            await player.seek(startPoint);
           }
         }
       }, 100);
