@@ -27,7 +27,7 @@ async function fetchSavedTracks(accessToken, limit) {
         ...data.items.map(({ track }) => ({
           name: track.name,
           id: track.id,
-          uri: track.uri, // Added URI field
+          uri: track.uri,
           album: {
             name: track.album.name,
             images: track.album.images,
@@ -41,8 +41,9 @@ async function fetchSavedTracks(accessToken, limit) {
   } catch (error) {
     console.error("Error fetching liked tracks:", error);
   }
+  const shuffledSavedTracks = shuffleArray(savedTracks);
 
-  return shuffleArray(savedTracks).slice(0, 100);
+  return shuffledSavedTracks.slice(0, 100);
 }
 
 async function fetchUserAlbums(accessToken, limit) {
@@ -72,7 +73,7 @@ async function fetchUserAlbums(accessToken, limit) {
       albumItem.album.tracks.items.map((track) => ({
         name: track.name,
         id: track.id,
-        uri: track.uri, // Added URI field
+        uri: track.uri,
         album: {
           name: albumItem.album.name,
           images: albumItem.album.images,
@@ -109,7 +110,12 @@ async function fetchUserPlaylists(accessToken, limit) {
   return shuffleArray(playlists);
 }
 
-async function fetchPlaylistTracks(accessToken, playlistId, limit) {
+async function fetchPlaylistTracks(
+  accessToken,
+  playlistId,
+  limit,
+  returnAmount
+) {
   let tracks = [];
   let offset = 0;
 
@@ -128,7 +134,7 @@ async function fetchPlaylistTracks(accessToken, playlistId, limit) {
         ...data.items.map(({ track }) => ({
           name: track.name,
           id: track.id,
-          uri: track.uri, // Added URI field
+          uri: track.uri,
           album: {
             name: track.album.name,
             images: track.album.images,
@@ -143,7 +149,9 @@ async function fetchPlaylistTracks(accessToken, playlistId, limit) {
     console.error(`Error fetching tracks for playlist ${playlistId}:`, error);
   }
 
-  return tracks;
+  const shuffledTracks = shuffleArray(tracks);
+
+  return shuffledTracks.slice(0, returnAmount);
 }
 
 export async function fetchRandomTracks(accessToken, fromLocal) {
@@ -191,12 +199,14 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
 
   // Fetch playlists and their tracks
   const playlists = await fetchUserPlaylists(accessToken, 100);
+  const numberOfPlaylistTracks = 200;
+  const returnAmount = playlists.length < 8 ? 200 : 50;
   for (const playlist of playlists) {
-    const numberOfPlaylistTracks = Math.floor(Math.random() * (150 - 30) + 30);
     const playlistTracks = await fetchPlaylistTracks(
       accessToken,
       playlist.id,
-      numberOfPlaylistTracks
+      numberOfPlaylistTracks,
+      returnAmount
     );
     for (const track of playlistTracks) {
       if (!trackIds.has(track.id)) {
@@ -204,7 +214,7 @@ export async function fetchRandomTracks(accessToken, fromLocal) {
         uniqueTracks.push(track);
       }
     }
-    if (uniqueTracks.length >= 700) break;
+    if (uniqueTracks.length >= 800) break;
   }
 
   const shuffledTracks = shuffleArray(uniqueTracks);
