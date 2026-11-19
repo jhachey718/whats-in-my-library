@@ -6,6 +6,8 @@ Built with React and JavaScript, the Spotify Web API, and the Spotify Web Playba
 
 > **Requires a Spotify Premium account.** The Web Playback SDK only streams for Premium users.
 
+Check it out: https://whats-in-my-library.netlify.app/
+> **Email needs to be manually added by developer.**
 ## Features
 
 - **Plays from your library:** pulls songs from your liked songs, saved albums, and playlists, then shuffles them into a game queue.
