@@ -1,70 +1,130 @@
-# Getting Started with Create React App
+# What's in My Library?
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A music guessing game built on your own Spotify library. The app plays a short clip of a random song from your saved tracks, saved albums, and playlists, and you guess the **artist**, **song**, and **album**. Shorter clips are harder, and your scores are saved per difficulty.
 
-## Available Scripts
+Built with React and JavaScript, the Spotify Web API, and the Spotify Web Playback SDK. Authentication is handled with the Spotify Authorization Code flow through serverless Netlify Functions.
 
-In the project directory, you can run:
+> **Requires a Spotify Premium account.** The Web Playback SDK only streams for Premium users.
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Plays from your library:** pulls songs from your liked songs, saved albums, and playlists, then shuffles them into a game queue.
+- **Three difficulty modes:** hear 1, 5, or 10 seconds of each song.
+- **Scoring:** artist = 1 point, song = 2 points, album = 3 points. High scores are tracked for each mode.
+- **Typo-tolerant guessing:** guesses are compared to the answer with Levenshtein distance and a similarity percentage, so small spelling mistakes still count.
+- **Progress is saved:** your queue position, scores, and selected mode are kept in the browser, so you can pick up where you left off.
+- **Anti-cheat:** you can't switch difficulty in the middle of a game.
+- **Responsive UI:** built with React Bootstrap.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Tech Stack
 
-### `npm test`
+| Area | Tools |
+|---|---|
+| Front end | React 18, React Bootstrap / Bootstrap 5, JavaScript (ES6+) |
+| Spotify | Web API (`/me`, `/me/tracks`, `/me/albums`, `/me/playlists`, `/me/player`), Web Playback SDK |
+| Auth and back end | Netlify Functions (Node.js), Axios, OAuth 2.0 Authorization Code flow |
+| Storage | `localStorage`, with `lz-string` compression for the cached track list |
+| Hosting | Netlify |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## How Authentication Works
 
-### `npm run build`
+Spotify requires a client secret to exchange an authorization code for tokens, and a secret can't safely live in front-end code. This project keeps the secret on the server side with three Netlify Functions:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **`/login`** generates a random `state` value, stores it in a cookie (`Secure; HttpOnly` in production), and redirects the user to Spotify's authorize page with the scopes the game needs.
+2. **`/callback`** is where Spotify sends the user back. It checks that the returned `state` matches the cookie, which protects against CSRF. It then exchanges the authorization code for an access token and refresh token using the client ID and secret, and redirects back to the app.
+3. **`/refresh_token`** trades a refresh token for a new access token, so users aren't logged out when the one-hour token expires.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+On the client:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- `getHashParams` reads the tokens and expiry from the URL after login.
+- `App.js` keeps the tokens in React state, requests a new access token before the old one expires (every 55 minutes), and updates the Web Playback SDK's `getOAuthToken` callback so playback continues uninterrupted.
+- The app calls `/v1/me` after login to check for a Premium account, and sends users back to the login page if the token is rejected.
 
-### `npm run eject`
+### Scopes requested
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+`user-library-read`, `user-read-email`, `user-read-private`, `user-modify-playback-state`, `user-read-playback-state`, `streaming`, `playlist-read-private`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Working with the Spotify API
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Spotify returns results one page at a time (50 items maximum), so `fetchAllTracks.js` loops with `limit` and `offset` until it has enough tracks or runs out of results.
+- Saved tracks, albums, and playlists each have their own response shape. The code converts them into one consistent track format that the game uses.
+- The track list is shuffled with a Fisher-Yates shuffle, compressed with LZ-String, and cached in `localStorage` so the game doesn't re-fetch the whole library each time it loads.
+- Playback goes through the Web Playback SDK. The app waits for the SDK to be ready, registers a browser device, transfers playback to it, and stops the song after the chosen clip length.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Project Structure
 
-## Learn More
+```
+functions/
+  login.js            # redirects to Spotify, sets the state cookie
+  callback.js         # validates state, exchanges the code for tokens
+  refresh_token.js    # returns a new access token
+  utils/auth-config.js
+src/
+  App.js              # token state, refresh timer, Premium check
+  components/         # Dashboard, Player, GuessBox, Score, buttons, modals
+  util/
+    auth.js           # reads tokens from the URL
+    fetchAllTracks.js # paginated Spotify API calls, shuffle, caching
+    guessValidator.js # Levenshtein distance and similarity %
+netlify.toml
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Getting Started
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Prerequisites
 
-### Code Splitting
+- Node.js 18 or newer
+- A Spotify Premium account
+- A [Spotify Developer](https://developer.spotify.com/dashboard) app (gives you a client ID and secret)
+- [Netlify CLI](https://docs.netlify.com/cli/get-started/): `npm install -g netlify-cli`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Setup
 
-### Analyzing the Bundle Size
+1. Clone the repo and install dependencies:
+   ```bash
+   git clone https://github.com/jhachey718/whats-in-my-library.git
+   cd whats-in-my-library
+   npm install
+   ```
+2. In the Spotify Developer Dashboard, add this redirect URI to your app:
+   ```
+   https://localhost:8888/.netlify/functions/callback
+   ```
+   For a deployed site, use `https://<your-site>.netlify.app/.netlify/functions/callback`.
+3. Create a `.env` file in the project root:
+   ```
+   REACT_APP_CLIENT_ID=your_spotify_client_id
+   REACT_APP_CLIENT_SECRET=your_spotify_client_secret
+   ```
+4. Create a local HTTPS certificate (for example with [mkcert](https://github.com/FiloSottile/mkcert)) named `localhost.pem` and `localhost-key.pem` in the project root. `netlify.toml` uses them for local HTTPS.
+5. Start the app through Netlify so the functions run too:
+   ```bash
+   netlify dev
+   ```
+   Then open `https://localhost:8888`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Deploying
 
-### Making a Progressive Web App
+Connect the repo to Netlify. The build settings are in `netlify.toml`. Add `REACT_APP_CLIENT_ID` and `REACT_APP_CLIENT_SECRET` as environment variables in the Netlify dashboard.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## How to Play
 
-### Advanced Configuration
+1. Log in with Spotify.
+2. Choose a clip length (1s, 5s, or 10s).
+3. Press play, then type your guess for the artist, song, and album.
+4. Press next to move on. Your score is saved for that mode.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Scripts
 
-### Deployment
+| Command | What it does |
+|---|---|
+| `npm start` | Runs the React app only (no functions, so login won't work) |
+| `netlify dev` | Runs the app and the Netlify Functions together |
+| `npm run build` | Builds for production |
+| `npm test` | Runs the test runner |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Ideas for the Future
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Share scores or play against friends
+- Hint and streak features
+- Unit tests for the guess validator and track-fetching utilities
